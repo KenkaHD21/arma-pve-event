@@ -35,13 +35,19 @@ function buildCsvFromData(data) {
 
   lines.push('[EVENT]');
   lines.push('Feld;Wert');
+  lines.push('Missionstitel;' + escapeCsv(ev.missionstitel));
+  lines.push('Karte;' + escapeCsv(ev.karte));
   lines.push('Datum;' + escapeCsv(ev.datum));
   lines.push('Uhrzeit;' + escapeCsv(ev.uhrzeit));
+  lines.push('Dauer;' + escapeCsv(ev.dauer));
   lines.push('Zeitzone;' + escapeCsv(ev.zeitzone));
   lines.push('Server;' + escapeCsv(ev.server));
   lines.push('Passwort;' + escapeCsv(ev.passwort));
+  lines.push('TeilnehmerLimit;' + escapeCsv(ev.teilnehmerlimit));
   lines.push('Beschreibung;' + escapeCsv(ev.beschreibung));
   lines.push('Kontakt;' + escapeCsv(ev.kontakt));
+  lines.push('Version;' + escapeCsv(ev.version));
+  lines.push('Notizen;' + escapeCsv(ev.notizen));
   lines.push('');
 
   lines.push('[SLOTLISTE]');
@@ -197,8 +203,10 @@ function parseCsvToData(csvText) {
     if (lines[i] === '[EVENT]') {
       const d = parseCsvSection(lines, i + 1);
       data.event = {
-        datum: d.Datum || '', uhrzeit: d.Uhrzeit || '', zeitzone: d.Zeitzone || 'MEZ',
-        server: d.Server || '', passwort: d.Passwort || '', beschreibung: d.Beschreibung || '', kontakt: d.Kontakt || ''
+        missionstitel: d.Missionstitel || '', karte: d.Karte || '', datum: d.Datum || '', uhrzeit: d.Uhrzeit || '',
+        dauer: d.Dauer || '', zeitzone: d.Zeitzone || 'MEZ', server: d.Server || '', passwort: d.Passwort || '',
+        teilnehmerlimit: d.TeilnehmerLimit || '40', beschreibung: d.Beschreibung || '', kontakt: d.Kontakt || '',
+        version: d.Version || '', notizen: d.Notizen || ''
       };
     } else if (lines[i] === '[SLOTLISTE]') {
       data.slotliste = parseCsvSlotliste(lines, i);
@@ -350,7 +358,7 @@ function loadFromCsvStorage() {
     const la = JSON.parse(localStorage.getItem(STORAGE_KEYS_LEGACY.ladef) || '{}');
     if (Object.keys(ev).length || Object.keys(sl).length || Object.keys(la).length) {
       const data = {
-        event: Object.assign({ zeitzone: 'MEZ', passwort: '', beschreibung: '', kontakt: '' }, ev),
+        event: Object.assign({ missionstitel: '', karte: '', dauer: '', teilnehmerlimit: '40', zeitzone: 'MEZ', passwort: '', beschreibung: '', kontakt: '', version: '', notizen: '' }, ev),
         slotliste: sl, ladef: la, checkliste: {}, funk: [], mods: [], brevity: [], respawn: ''
       };
       csv = buildCsvFromData(data);
@@ -397,6 +405,22 @@ function exportToCsv() {
 function importFromCsv(csvText) {
   const data = parseCsvToData(csvText);
   saveToCsvStorage(data);
+}
+
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {}).catch(() => fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
 }
 
 /** Löscht alle gespeicherten Daten. */

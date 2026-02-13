@@ -86,7 +86,10 @@
                 </tr>
                 <tbody id="funk-tbody"></tbody>
             </table>
-            <button class="btn btn-outline" onclick="addFunkRow()" style="margin-top: 0.5rem;">+ Zeile hinzufügen</button>
+            <div style="display:flex;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;">
+                <button class="btn btn-outline" onclick="addFunkRow()">+ Zeile hinzufügen</button>
+                <button class="btn btn-outline" onclick="copyFrequencies()">📋 Alle Frequenzen kopieren</button>
+            </div>
             <p class="note">Jedes Squad hat eigene Primär- und Ausweichfrequenz. Command und JTAC: separate Netze.</p>
         </section>
 
@@ -202,6 +205,13 @@
 
         function saveFunk() {
             updateCsvStorage({ funk: getFunkData() });
+        }
+
+        function copyFrequencies() {
+            const rows = getFunkData();
+            const txt = rows.filter(r => (r.netz || r.primaer || r.ausweich)).map(r => (r.netz || 'Netz') + ': ' + (r.primaer || '') + ' / ' + (r.ausweich || '') + ' MHz').join('\n');
+            if (typeof copyToClipboard === 'function') copyToClipboard(txt || 'Keine Frequenzen');
+            else alert(txt || 'Keine Frequenzen');
         }
 
         function getBrevityData() {
