@@ -128,6 +128,22 @@
             updateCsvStorage({ organigramm: getOrganigrammData() });
         }
 
+        function saveSlotNames() {
+            const data = loadFromCsvStorage();
+            const slotliste = data.slotliste || {};
+            const chart = document.getElementById('org-chart');
+            if (!chart) return;
+            chart.querySelectorAll('.slot-name[data-slot]').forEach(inp => {
+                const slot = inp.dataset.slot;
+                const name = inp.value.trim();
+                if (slot) {
+                    slotliste[slot] = slotliste[slot] || {};
+                    slotliste[slot].name = name;
+                }
+            });
+            updateCsvStorage({ slotliste });
+        }
+
         function render() {
             const data = loadFromCsvStorage();
             const org = data.organigramm && data.organigramm.squads && data.organigramm.squads.length
@@ -144,7 +160,7 @@
             html += '<div class="org-node platoon">';
             html += '<input type="text" id="org-platoon-title" value="' + esc(platoon.title) + '" placeholder="z.B. PLATOON LEAD (PL)" maxlength="60">';
             html += '<input type="text" class="slot-input" id="org-platoon-subtitle" value="' + esc(platoon.subtitle) + '" placeholder="z.B. Zugführer" maxlength="40">';
-            if (slotliste[1] && slotliste[1].name) html += '<div class="slot-name">' + esc(slotliste[1].name) + '</div>';
+            html += '<input type="text" class="slot-input slot-name" data-slot="1" data-field="name" value="' + esc((slotliste['1'] || slotliste[1] || {}).name || '') + '" placeholder="Name (PL)" maxlength="40">';
             html += '</div>';
 
             html += '<div class="connector"></div>';
@@ -155,12 +171,13 @@
 
             squads.forEach((s, idx) => {
                 const slotId = SLOT_BY_SQUAD[idx];
-                const slName = slotId && slotliste[slotId] && slotliste[slotId].name ? slotliste[slotId].name : '';
+                const sl = slotId && (slotliste[String(slotId)] || slotliste[slotId]);
+                const slName = sl && sl.name ? sl.name : '';
                 html += '<div class="squad-group">';
                 html += '<div class="org-node squad">';
                 html += '<input type="text" class="squad-title" value="' + esc(s.title) + '" placeholder="Squad" maxlength="50">';
                 html += '<input type="text" class="squad-subtitle slot-input" value="' + esc(s.subtitle) + '" placeholder="SL + Medic" maxlength="40">';
-                if (slName) html += '<div class="slot-name">' + esc(slName) + '</div>';
+                if (slotId) html += '<input type="text" class="slot-input slot-name" data-slot="' + slotId + '" data-field="name" value="' + esc(slName) + '" placeholder="Name (SL)" maxlength="40">';
                 html += '<button class="btn btn-outline btn-rm" onclick="removeSquad(' + idx + ')">Squad entfernen</button>';
                 html += '</div>';
                 html += '<div class="connector"></div>';
@@ -174,8 +191,10 @@
             chart.innerHTML = html;
 
             chart.querySelectorAll('input').forEach(inp => {
-                inp.addEventListener('change', saveOrg);
-                inp.addEventListener('input', () => { clearTimeout(window._org); window._org = setTimeout(saveOrg, 400); });
+                const onSave = inp.classList.contains('slot-name') ? saveSlotNames : saveOrg;
+                const timerKey = inp.classList.contains('slot-name') ? '_orgSlot' : '_org';
+                inp.addEventListener('change', onSave);
+                inp.addEventListener('input', () => { clearTimeout(window[timerKey]); window[timerKey] = setTimeout(onSave, 400); });
             });
         }
 
