@@ -52,6 +52,10 @@
             border-left: 3px solid var(--accent);
         }
         .radio-card strong { color: var(--accent); }
+        input.funk-input { width: 100%; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 4px; padding: 0.4rem; color: var(--text); font-family: inherit; }
+        input.funk-input:focus { outline: none; border-color: var(--accent); }
+        .btn { padding: 0.5rem 1rem; background: var(--accent); border: none; border-radius: 4px; color: var(--bg-dark); font-family: inherit; font-weight: 600; cursor: pointer; }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
     </style>
 </head>
 <body>
@@ -71,51 +75,18 @@
 
         <section>
             <h2>Frequenzübersicht – Arma Reforger + ACE Radio / WCS</h2>
-            <p class="note" style="margin-bottom: 1rem;">Frequenzschritt: 0,1 MHz (100 kHz). Alle Frequenzen 32–68 MHz.</p>
-            <table>
+            <p class="note" style="margin-bottom: 1rem;">Frequenzschritt: 0,1 MHz (100 kHz). Alle Frequenzen 32–68 MHz. Bearbeitbar.</p>
+            <table id="funk-table">
                 <tr>
                     <th>Netz</th>
                     <th>MHz (Primär)</th>
                     <th>MHz (Ausweich)</th>
                     <th>Teilnehmer</th>
+                    <th></th>
                 </tr>
-                <tr>
-                    <td><strong>Command (PL + SLs)</strong></td>
-                    <td class="mono freq">40.0</td>
-                    <td class="mono freq">36.0</td>
-                    <td>Nur PL + alle Gruppenführer (SLs)</td>
-                </tr>
-                <tr>
-                    <td><strong>JTAC</strong></td>
-                    <td class="mono freq">44.0</td>
-                    <td class="mono freq">42.0</td>
-                    <td>JTAC, PL, ggf. Luftunterstützung</td>
-                </tr>
-                <tr>
-                    <td><strong>Squad 1 (Alpha)</strong></td>
-                    <td class="mono freq">48.0</td>
-                    <td class="mono freq">52.0</td>
-                    <td>SL1, FTL-A, FTL-B, Medic, Mannschaft</td>
-                </tr>
-                <tr>
-                    <td><strong>Squad 2 (Bravo)</strong></td>
-                    <td class="mono freq">54.0</td>
-                    <td class="mono freq">58.0</td>
-                    <td>SL2, FTL-A, FTL-B, Medic, Mannschaft</td>
-                </tr>
-                <tr>
-                    <td><strong>Squad 3 (Charlie)</strong></td>
-                    <td class="mono freq">60.0</td>
-                    <td class="mono freq">64.0</td>
-                    <td>SL3, FTL-A, FTL-B, Medic, Mannschaft</td>
-                </tr>
-                <tr>
-                    <td><strong>Squad 4 (Delta)</strong></td>
-                    <td class="mono freq">66.0</td>
-                    <td class="mono freq">68.0</td>
-                    <td>SL4, FTL-A, FTL-B, Medic, Mannschaft</td>
-                </tr>
+                <tbody id="funk-tbody"></tbody>
             </table>
+            <button class="btn btn-outline" onclick="addFunkRow()" style="margin-top: 0.5rem;">+ Zeile hinzufügen</button>
             <p class="note">Jedes Squad hat eigene Primär- und Ausweichfrequenz. Command und JTAC: separate Netze.</p>
         </section>
 
@@ -148,17 +119,12 @@
 
         <section>
             <h2>Funkdisziplin & Brevity Codes</h2>
-            <table>
-                <tr><th>Code</th><th>Bedeutung</th></tr>
-                <tr><td>Contact</td><td>Feindkontakt</td></tr>
-                <tr><td>Moving</td><td>In Bewegung</td></tr>
-                <tr><td>In Position</td><td>Am Zielort</td></tr>
-                <tr><td>Roger / Wilco</td><td>Verstanden / Wird ausgeführt</td></tr>
-                <tr><td>Say Again</td><td>Wiederholen</td></tr>
-                <tr><td>Break, Break</td><td>Wichtige Unterbrechung</td></tr>
-                <tr><td>Over</td><td>Ende meiner Meldung, Antwort erwartet</td></tr>
-                <tr><td>Out</td><td>Ende, keine Antwort nötig</td></tr>
+            <p class="note" style="margin-bottom: 0.5rem;">Eigene Codes hinzufügen oder bearbeiten.</p>
+            <table id="brevity-table">
+                <tr><th>Code</th><th>Bedeutung</th><th></th></tr>
+                <tbody id="brevity-tbody"></tbody>
             </table>
+            <button class="btn btn-outline" onclick="addBrevityRow()" style="margin-top: 0.5rem;">+ Code hinzufügen</button>
         </section>
 
         <section>
@@ -180,5 +146,118 @@
             </ul>
         </section>
     </div>
+
+    <script src="csv-export.js"></script>
+    <script>
+        function getFunkData() {
+            const rows = [];
+            document.querySelectorAll('#funk-tbody tr').forEach(tr => {
+                const inp = tr.querySelectorAll('input.funk-input');
+                if (inp.length >= 4) rows.push({ netz: inp[0].value, primaer: inp[1].value, ausweich: inp[2].value, teilnehmer: inp[3].value });
+            });
+            return rows;
+        }
+
+        function renderFunk(rows) {
+            const tbody = document.getElementById('funk-tbody');
+            if (!tbody) return;
+            const data = rows && rows.length ? rows : DEFAULT_FUNK;
+            tbody.innerHTML = data.map((r, i) => `
+                <tr>
+                    <td><input class="funk-input" data-col="netz" value="${(r.netz || '').replace(/"/g, '&quot;')}" placeholder="Netz"></td>
+                    <td><input class="funk-input mono" data-col="primaer" value="${(r.primaer || '').replace(/"/g, '&quot;')}" placeholder="MHz"></td>
+                    <td><input class="funk-input mono" data-col="ausweich" value="${(r.ausweich || '').replace(/"/g, '&quot;')}" placeholder="MHz"></td>
+                    <td><input class="funk-input" data-col="teilnehmer" value="${(r.teilnehmer || '').replace(/"/g, '&quot;')}" placeholder="Teilnehmer"></td>
+                    <td><button class="btn btn-outline" onclick="removeFunkRow(this)" style="padding:0.25rem 0.5rem;font-size:0.8rem;">×</button></td>
+                </tr>
+            `).join('');
+            tbody.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('change', saveFunk);
+                inp.addEventListener('input', () => { clearTimeout(window._f); window._f = setTimeout(saveFunk, 500); });
+            });
+        }
+
+        function addFunkRow() {
+            const tbody = document.getElementById('funk-tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input class="funk-input" data-col="netz" placeholder="Netz"></td>
+                <td><input class="funk-input mono" data-col="primaer" placeholder="MHz"></td>
+                <td><input class="funk-input mono" data-col="ausweich" placeholder="MHz"></td>
+                <td><input class="funk-input" data-col="teilnehmer" placeholder="Teilnehmer"></td>
+                <td><button class="btn btn-outline" onclick="removeFunkRow(this)" style="padding:0.25rem 0.5rem;font-size:0.8rem;">×</button></td>
+            `;
+            tr.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('change', saveFunk);
+                inp.addEventListener('input', () => { clearTimeout(window._f); window._f = setTimeout(saveFunk, 500); });
+            });
+            tbody.appendChild(tr);
+            saveFunk();
+        }
+
+        function removeFunkRow(btn) {
+            btn.closest('tr').remove();
+            saveFunk();
+        }
+
+        function saveFunk() {
+            updateCsvStorage({ funk: getFunkData() });
+        }
+
+        function getBrevityData() {
+            const rows = [];
+            document.querySelectorAll('#brevity-tbody tr').forEach(tr => {
+                const inp = tr.querySelectorAll('input.funk-input');
+                if (inp.length >= 2) rows.push({ code: inp[0].value, bedeutung: inp[1].value });
+            });
+            return rows;
+        }
+
+        function renderBrevity(rows) {
+            const tbody = document.getElementById('brevity-tbody');
+            if (!tbody) return;
+            const data = rows && rows.length ? rows : DEFAULT_BREVITY;
+            tbody.innerHTML = data.map(r => `
+                <tr>
+                    <td><input class="funk-input" value="${(r.code || '').replace(/"/g, '&quot;')}" placeholder="Code"></td>
+                    <td><input class="funk-input" value="${(r.bedeutung || '').replace(/"/g, '&quot;')}" placeholder="Bedeutung"></td>
+                    <td><button class="btn btn-outline" onclick="removeBrevityRow(this)" style="padding:0.25rem 0.5rem;font-size:0.8rem;">×</button></td>
+                </tr>
+            `).join('');
+            tbody.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('change', saveBrevity);
+                inp.addEventListener('input', () => { clearTimeout(window._b); window._b = setTimeout(saveBrevity, 500); });
+            });
+        }
+
+        function addBrevityRow() {
+            const tbody = document.getElementById('brevity-tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input class="funk-input" placeholder="Code"></td>
+                <td><input class="funk-input" placeholder="Bedeutung"></td>
+                <td><button class="btn btn-outline" onclick="removeBrevityRow(this)" style="padding:0.25rem 0.5rem;font-size:0.8rem;">×</button></td>
+            `;
+            tr.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('change', saveBrevity);
+                inp.addEventListener('input', () => { clearTimeout(window._b); window._b = setTimeout(saveBrevity, 500); });
+            });
+            tbody.appendChild(tr);
+            saveBrevity();
+        }
+
+        function removeBrevityRow(btn) {
+            btn.closest('tr').remove();
+            saveBrevity();
+        }
+
+        function saveBrevity() {
+            updateCsvStorage({ brevity: getBrevityData() });
+        }
+
+        const data = loadFromCsvStorage();
+        renderFunk(data.funk);
+        renderBrevity(data.brevity);
+    </script>
 </body>
 </html>

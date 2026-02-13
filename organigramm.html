@@ -221,5 +221,30 @@
             <p>PL → SL → FTL → Mannschaft. Meldungen laufen von unten nach oben, Befehle von oben nach unten. Bei Abwesenheit des PL übernimmt der dienstälteste SL.</p>
         </section>
     </div>
+
+    <script src="csv-export.js"></script>
+    <script>
+        const SLOT_NAMES = { 1: 'PL', 2: 'SL1', 10: 'SL2', 18: 'SL3', 26: 'SL4' };
+        const data = loadFromCsvStorage();
+        const slotliste = data.slotliste || {};
+        document.querySelectorAll('.org-node').forEach(node => {
+            const roleEl = node.querySelector('.role');
+            if (!roleEl) return;
+            const txt = roleEl.textContent;
+            let slot = null;
+            if (txt.includes('PLATOON')) slot = 1;
+            else if (txt.includes('SQUAD 1')) slot = 2;
+            else if (txt.includes('SQUAD 2')) slot = 10;
+            else if (txt.includes('SQUAD 3')) slot = 18;
+            else if (txt.includes('SQUAD 4')) slot = 26;
+            if (slot && slotliste[slot] && slotliste[slot].name) {
+                const nameEl = document.createElement('div');
+                nameEl.className = 'slot-name';
+                nameEl.style.cssText = 'font-size:0.85rem;color:var(--accent-dim);margin-top:0.25rem;';
+                nameEl.textContent = slotliste[slot].name;
+                node.appendChild(nameEl);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -119,14 +119,35 @@
                     <input type="text" id="event-uhrzeit" placeholder="z.B. 19:00" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
                 </div>
                 <div class="info-card">
+                    <strong>Zeitzone:</strong><br>
+                    <input type="text" id="event-zeitzone" placeholder="z.B. MEZ" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
+                </div>
+                <div class="info-card">
                     <strong>Server:</strong><br>
                     <input type="text" id="event-server" placeholder="IP:Port" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
                 </div>
                 <div class="info-card">
+                    <strong>Passwort:</strong><br>
+                    <input type="password" id="event-passwort" placeholder="Optional" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
+                </div>
+                <div class="info-card">
+                    <strong>Kontakt / Organisator:</strong><br>
+                    <input type="text" id="event-kontakt" placeholder="Name oder Kontakt" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
+                </div>
+                <div class="info-card" style="grid-column: 1 / -1;">
+                    <strong>Beschreibung:</strong><br>
+                    <textarea id="event-beschreibung" placeholder="Kurze Beschreibung des Events..." rows="3" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;resize:vertical;"></textarea>
+                </div>
+                <div class="info-card" style="grid-column: 1 / -1;">
                     <strong>Mods:</strong><br>
-                    <a href="mods.html" style="color: var(--accent);">###### – Mod-Liste</a>
+                    <a href="mods.html" style="color: var(--accent);">Mod-Liste</a>
                 </div>
             </div>
+        </section>
+
+        <section id="countdown-section" style="display:none;">
+            <h2>Countdown</h2>
+            <p id="countdown-display" style="font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent);"></p>
         </section>
 
         <section>
@@ -138,7 +159,7 @@
                     Import CSV
                     <input type="file" accept=".csv" id="csv-import" style="display: none;">
                 </label>
-                <button onclick="if(confirm('Alle Daten (Event, Slotliste, LADEF, Checkliste) wirklich löschen?')){ clearAllData(); location.reload(); }" style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--alert); border-radius: 4px; color: var(--alert); font-family: inherit; font-weight: 600; cursor: pointer;">Alles löschen</button>
+                <button onclick="if(confirm('Alle Daten wirklich löschen?')){ clearAllData(); location.reload(); }" style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--alert); border-radius: 4px; color: var(--alert); font-family: inherit; font-weight: 600; cursor: pointer;">Alles löschen</button>
             </div>
         </section>
 
@@ -170,6 +191,11 @@
         </section>
 
         <section>
+            <h2>Respawn-Regeln</h2>
+            <textarea id="respawn-regeln" placeholder="z.B.: Respawn bei Medic oder am Rally Point. Kein Respawn bei Feindnähe. Verwundet: 5 Min Wartezeit." rows="4" style="width:100%;padding:0.75rem;background:var(--bg-dark);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:inherit;resize:vertical;"></textarea>
+        </section>
+
+        <section>
             <h2>Wichtige Hinweise</h2>
             <ul style="margin-left: 1.5rem;">
                 <li>Funkdisziplin: Nur relevante Meldungen, klare Ansprache</li>
@@ -186,8 +212,8 @@
 
     <script src="csv-export.js"></script>
     <script>
-        const EVENT_KEYS = ['datum', 'uhrzeit', 'server'];
-        const EVENT_IDS = { datum: 'event-datum', uhrzeit: 'event-uhrzeit', server: 'event-server' };
+        const EVENT_KEYS = ['datum', 'uhrzeit', 'zeitzone', 'server', 'passwort', 'beschreibung', 'kontakt'];
+        const EVENT_IDS = { datum: 'event-datum', uhrzeit: 'event-uhrzeit', zeitzone: 'event-zeitzone', server: 'event-server', passwort: 'event-passwort', beschreibung: 'event-beschreibung', kontakt: 'event-kontakt' };
 
         function loadEvent() {
             const data = loadFromCsvStorage();
@@ -206,7 +232,44 @@
             updateCsvStorage({ event: d });
         }
 
-        document.querySelectorAll('#event-datum, #event-uhrzeit, #event-server').forEach(el => {
+        function parseEventDate() {
+            const data = loadFromCsvStorage();
+            const datum = (data.event.datum || '').trim();
+            const uhrzeit = (data.event.uhrzeit || '19:00').trim();
+            if (!datum) return null;
+            const p = datum.split(/[.\/\-]/);
+            const y = parseInt(p[2] || p[0], 10);
+            const m = parseInt(p[1] || p[0], 10) - 1;
+            const d = parseInt(p[0] || p[2], 10);
+            const [h, min] = uhrzeit.split(':').map(x => parseInt(x, 10) || 0);
+            return new Date(y, m, d, h || 19, min || 0, 0);
+        }
+
+        function updateCountdown() {
+            const target = parseEventDate();
+            const sec = document.getElementById('countdown-display');
+            const secEl = document.getElementById('countdown-section');
+            if (!sec || !secEl) return;
+            if (!target) {
+                secEl.style.display = 'none';
+                return;
+            }
+            const now = new Date();
+            secEl.style.display = 'block';
+            if (target <= now) {
+                sec.textContent = 'Event hat bereits begonnen oder ist vorbei.';
+                return;
+            }
+            const diff = target - now;
+            const t = Math.floor(diff / 1000);
+            const d = Math.floor(t / 86400);
+            const h = Math.floor((t % 86400) / 3600);
+            const m = Math.floor((t % 3600) / 60);
+            const s = t % 60;
+            sec.textContent = (d > 0 ? d + 'd ' : '') + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
+        document.querySelectorAll('#event-datum, #event-uhrzeit, #event-zeitzone, #event-server, #event-passwort, #event-beschreibung, #event-kontakt').forEach(el => {
             el.addEventListener('change', saveEvent);
             el.addEventListener('input', () => { clearTimeout(window._ev); window._ev = setTimeout(saveEvent, 500); });
         });
@@ -218,13 +281,24 @@
             r.onload = function() {
                 importFromCsv(r.result);
                 loadEvent();
-                alert('Import abgeschlossen. Event-Daten aktualisiert. Slotliste und LADEF laden die neuen Daten beim Aufruf.');
+                const d = loadFromCsvStorage();
+                const re = document.getElementById('respawn-regeln');
+                if (re) re.value = d.respawn || '';
+                alert('Import abgeschlossen. Seite neu laden empfohlen.');
             };
             r.readAsText(f, 'UTF-8');
             e.target.value = '';
         });
 
         loadEvent();
+        const respawnEl = document.getElementById('respawn-regeln');
+        if (respawnEl) {
+            const d = loadFromCsvStorage();
+            respawnEl.value = d.respawn || '';
+            respawnEl.addEventListener('input', () => { clearTimeout(window._r); window._r = setTimeout(() => updateCsvStorage({ respawn: respawnEl.value }), 500); });
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>

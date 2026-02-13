@@ -28,15 +28,22 @@
         section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
         h2 { color: var(--accent); font-size: 1.1rem; margin-bottom: 1rem; }
         .mod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.5rem; }
-        .mod-item { padding: 0.4rem 0.6rem; background: var(--bg-dark); border-radius: 4px; font-size: 0.9rem; border-left: 2px solid var(--border); }
+        .mod-item { padding: 0.4rem 0.6rem; background: var(--bg-dark); border-radius: 4px; font-size: 0.9rem; border-left: 2px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
         .mod-item.ace { border-left-color: var(--accent); }
         .mod-item.wcs { border-left-color: #58a6ff; }
         .mod-item.core { border-left-color: var(--accent-dim); }
+        .mod-item .mod-name { flex: 1; }
+        .mod-item .mod-rm { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; padding: 0 0.25rem; }
+        .mod-item .mod-rm:hover { color: #da3633; }
+        .add-mod { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; } 
+        .add-mod input, .add-mod select { padding: 0.5rem; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; }
+        .add-mod input { flex: 1; min-width: 200px; }
+        .btn { padding: 0.5rem 1rem; background: var(--accent); border: none; border-radius: 4px; color: var(--bg-dark); font-family: inherit; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
-        <header><h1>MOD-LISTE – ######</h1></header>
+        <header><h1>MOD-LISTE – Bearbeitbar</h1></header>
         <nav>
             <a href="index.html">Übersicht</a>
             <a href="organigramm.html">Organigramm</a>
@@ -48,168 +55,97 @@
         </nav>
 
         <section>
-            <h2>ACE (Advanced Combat Environment) – Funk & Realismus</h2>
-            <div class="mod-grid">
-                <span class="mod-item ace">ACE Core Dev</span>
-                <span class="mod-item ace">ACE Radio Dev</span>
-                <span class="mod-item ace">ACE Medical Core Dev</span>
-                <span class="mod-item ace">ACE Medical Hitzones Dev</span>
-                <span class="mod-item ace">ACE Medical Circulation Dev</span>
-                <span class="mod-item ace">ACE Carrying Dev</span>
-                <span class="mod-item ace">ACE Explosives Dev</span>
-                <span class="mod-item ace">ACE Magazine Repack Dev</span>
-                <span class="mod-item ace">ACE Tactical Ladder Dev</span>
-                <span class="mod-item ace">ACE Tactical Periscope Dev</span>
-                <span class="mod-item ace">ACE Trenches Dev</span>
-                <span class="mod-item ace">ACE Chopping Dev</span>
-                <span class="mod-item ace">ACE Finger Dev</span>
+            <h2>Mod hinzufügen</h2>
+            <div class="add-mod">
+                <input type="text" id="new-mod-name" placeholder="Mod-Name">
+                <select id="new-mod-kat">
+                    <option value="ace">ACE</option>
+                    <option value="wcs">WCS</option>
+                    <option value="rhs">RHS</option>
+                    <option value="grs">GRS</option>
+                    <option value="waffen">Waffen & Ausrüstung</option>
+                    <option value="fahrzeuge">Fahrzeuge & Luftfahrt</option>
+                    <option value="kleidung">Kleidung & Charaktere</option>
+                    <option value="gameplay">Gameplay & UI</option>
+                    <option value="weitere">Weitere Mods</option>
+                </select>
+                <button class="btn" onclick="addMod()">Hinzufügen</button>
             </div>
         </section>
 
-        <section>
-            <h2>WCS (Weapon & Combat Systems)</h2>
-            <div class="mod-grid">
-                <span class="mod-item wcs">WCS_Core</span>
-                <span class="mod-item wcs">WCS_Weapons</span>
-                <span class="mod-item wcs">WCS_RHS_Weapons</span>
-                <span class="mod-item wcs">WCS_Attachments</span>
-                <span class="mod-item wcs">WCS_Scopes</span>
-                <span class="mod-item wcs">WCS_Sounds</span>
-                <span class="mod-item wcs">WCS_Settings</span>
-                <span class="mod-item wcs">WCS_LoadoutEditor</span>
-                <span class="mod-item wcs">WCS_SpawnProtection</span>
-                <span class="mod-item wcs">WCS_Armaments</span>
-                <span class="mod-item wcs">WCS_RU</span>
-                <span class="mod-item wcs">WCS_Earplugs</span>
-                <span class="mod-item wcs">WCS_AH-64D</span>
-                <span class="mod-item wcs">WCS_AH-64D_Upgrade</span>
-                <span class="mod-item wcs">WCS_AH-6M</span>
-                <span class="mod-item wcs">WCS_ZU-23-2</span>
-                <span class="mod-item wcs">NH90 TTH Caiman WCS</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>RHS (Red Hammer Studios)</h2>
-            <div class="mod-grid">
-                <span class="mod-item">RHS - Content Pack 01</span>
-                <span class="mod-item">RHS - Content Pack 02</span>
-                <span class="mod-item">RHS - Germany Extras MrWW</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>GRS (Gear & Equipment)</h2>
-            <div class="mod-grid">
-                <span class="mod-item">GRS - Patches</span>
-                <span class="mod-item">GRS - Modular Vests & Rigs</span>
-                <span class="mod-item">GRS - USSR</span>
-                <span class="mod-item">GRS - Apparel</span>
-                <span class="mod-item">GRS - Belts & Bags & Droplegs</span>
-                <span class="mod-item">GRS - Germany CLOTHING MrWW</span>
-                <span class="mod-item">GRS - Dev Framework</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>Waffen & Ausrüstung</h2>
-            <div class="mod-grid">
-                <span class="mod-item">ARMA-RY CORE</span>
-                <span class="mod-item">ARMA-RY G3 BATTLE RIFLES</span>
-                <span class="mod-item">ARMA-RY G3 SPECIAL RIFLES</span>
-                <span class="mod-item">Nasty OSV-96</span>
-                <span class="mod-item">M110 DMR</span>
-                <span class="mod-item">MG3 with RIS rail</span>
-                <span class="mod-item">M17 Pistol</span>
-                <span class="mod-item">SVU-AS</span>
-                <span class="mod-item">Tonic AA12</span>
-                <span class="mod-item">Spanish Armory</span>
-                <span class="mod-item">RIS Laser Attachments</span>
-                <span class="mod-item">Rayzis Optics</span>
-                <span class="mod-item">Attachment Framework</span>
-                <span class="mod-item">Bacon Suppressors</span>
-                <span class="mod-item">Advanced Zeroing System</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>Fahrzeuge & Luftfahrt</h2>
-            <div class="mod-grid">
-                <span class="mod-item">PZG H-47 GER Reskin</span>
-                <span class="mod-item">NH-90 Ramp-Fix</span>
-                <span class="mod-item">50 Cal Door Gunner</span>
-                <span class="mod-item">AHC Fuel Systems</span>
-                <span class="mod-item">Realistic Combat Drones</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>Kleidung & Charaktere</h2>
-            <div class="mod-grid">
-                <span class="mod-item">Zeliks Character</span>
-                <span class="mod-item">Naughty Boys Balaclavas V2</span>
-                <span class="mod-item">Russian SSO Leaf Suits</span>
-                <span class="mod-item">Unn Ghillie</span>
-                <span class="mod-item">Gorka 4</span>
-                <span class="mod-item">FORTEX Gear Core</span>
-                <span class="mod-item">Country Flag Patches</span>
-                <span class="mod-item">EDL SquadPatches</span>
-                <span class="mod-item">Z.E.R.G. Patch</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>Gameplay & UI</h2>
-            <div class="mod-grid">
-                <span class="mod-item core">PTH_UI</span>
-                <span class="mod-item core">PTH Event Arsenal 3.0</span>
-                <span class="mod-item core">PTH Testing_Training_2</span>
-                <span class="mod-item">MinUi</span>
-                <span class="mod-item">TS Better Markers</span>
-                <span class="mod-item">Map Drawing</span>
-                <span class="mod-item">Bacon Loadout Editor</span>
-                <span class="mod-item">Disable Enemy Proximity VON UI</span>
-            </div>
-        </section>
-
-        <section>
-            <h2>Weitere Mods</h2>
-            <div class="mod-grid">
-                <span class="mod-item">CRX Enfusion A.I.</span>
-                <span class="mod-item">GM Trenches</span>
-                <span class="mod-item">Bacon Parachute</span>
-                <span class="mod-item">BetterSounds Voice overhaul</span>
-                <span class="mod-item">Night Vision System</span>
-                <span class="mod-item">Improved Blood Effect</span>
-                <span class="mod-item">BetterMuzzleFlash</span>
-                <span class="mod-item">Fastroping</span>
-                <span class="mod-item">Wirecutters 2</span>
-                <span class="mod-item">Shoot Houses BETA</span>
-                <span class="mod-item">Vehicle and Corpse Despawn</span>
-                <span class="mod-item">improved reforger ragdolls</span>
-                <span class="mod-item">Realism Overhaul - Recoil</span>
-                <span class="mod-item">Better Weapon Immersion 2.8</span>
-                <span class="mod-item">TacticalAnimationOverhaul TEST</span>
-                <span class="mod-item">Bon Action Animations</span>
-                <span class="mod-item">ADSSway - Core</span>
-                <span class="mod-item">ADSSway - MG3 RIS</span>
-                <span class="mod-item">ADSSway - ARMA-RY G3 Rifles</span>
-                <span class="mod-item">ADSSway - PIP DOF - TEST</span>
-                <span class="mod-item">BWI - ADSsway-RHS-TAO compat</span>
-                <span class="mod-item">Aiming Deadzone</span>
-                <span class="mod-item">UHC FOV</span>
-                <span class="mod-item">420s Keep weapons on uncon</span>
-                <span class="mod-item">420s Tweaks</span>
-                <span class="mod-item">DA_Tweaks</span>
-                <span class="mod-item">Lunacy Overdrive</span>
-                <span class="mod-item">War Tapes Incursion</span>
-                <span class="mod-item">Bumsos_Banner</span>
-                <span class="mod-item">SpaceCore</span>
-                <span class="mod-item">AKI_Core_Upgrade</span>
-                <span class="mod-item">Server Admin Tools</span>
-                <span class="mod-item">WZ Turrets</span>
-            </div>
-        </section>
+        <div id="mods-container"></div>
     </div>
+
+    <script src="csv-export.js"></script>
+    <script>
+        const KAT_CLASS = { ace: 'ace', wcs: 'wcs', gameplay: 'core', core: 'core' };
+
+        function getModsFromDOM() {
+            const mods = [];
+            document.querySelectorAll('.mod-item').forEach(el => {
+                const name = el.querySelector('.mod-name');
+                if (name) mods.push({ name: name.textContent.trim(), kategorie: el.dataset.kat || 'weitere' });
+            });
+            return mods;
+        }
+
+        function renderMods(mods) {
+            const data = mods && mods.length ? mods : DEFAULT_MODS;
+            const byKat = {};
+            MOD_KATEGORIEN.forEach(k => byKat[k.id] = []);
+            data.forEach(m => {
+                const k = m.kategorie || 'weitere';
+                if (!byKat[k]) byKat[k] = [];
+                byKat[k].push(m);
+            });
+            const container = document.getElementById('mods-container');
+            container.innerHTML = MOD_KATEGORIEN.map(kat => {
+                const items = byKat[kat.id] || [];
+                if (!items.length) return '';
+                return `
+                    <section>
+                        <h2>${kat.label}</h2>
+                        <div class="mod-grid">
+                            ${items.map(m => `
+                                <div class="mod-item ${KAT_CLASS[m.kategorie] || ''}" data-kat="${m.kategorie}">
+                                    <span class="mod-name">${(m.name || '').replace(/</g, '&lt;')}</span>
+                                    <button class="mod-rm" onclick="removeMod(this)" title="Entfernen">×</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                `;
+            }).join('');
+        }
+
+        function addMod() {
+            const nameEl = document.getElementById('new-mod-name');
+            const katEl = document.getElementById('new-mod-kat');
+            const name = (nameEl && nameEl.value || '').trim();
+            if (!name) return;
+            const data = loadFromCsvStorage();
+            const mods = (data.mods && data.mods.length) ? [...data.mods] : [...DEFAULT_MODS];
+            mods.push({ name, kategorie: katEl ? katEl.value : 'weitere' });
+            updateCsvStorage({ mods });
+            renderMods(mods);
+            nameEl.value = '';
+        }
+
+        function removeMod(btn) {
+            const item = btn.closest('.mod-item');
+            const name = item.querySelector('.mod-name').textContent.trim();
+            const kat = item.dataset.kat || 'weitere';
+            const data = loadFromCsvStorage();
+            const mods = (data.mods && data.mods.length) ? data.mods : DEFAULT_MODS;
+            const filtered = mods.filter(m => !(m.name === name && (m.kategorie || 'weitere') === kat));
+            updateCsvStorage({ mods: filtered });
+            renderMods(filtered);
+        }
+
+        document.getElementById('new-mod-name').addEventListener('keydown', e => { if (e.key === 'Enter') addMod(); });
+
+        const data = loadFromCsvStorage();
+        renderMods(data.mods);
+    </script>
 </body>
 </html>

@@ -30,6 +30,8 @@
         .check-box { width: 20px; height: 20px; border: 2px solid var(--accent); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .check-box.checked { background: var(--accent); }
         .check-box.checked::after { content: '✓'; color: var(--bg-dark); font-size: 12px; font-weight: bold; }
+        .check-item .check-rm { margin-left: auto; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; }
+        .check-item .check-rm:hover { color: #da3633; }
     </style>
 </head>
 <body>
@@ -69,6 +71,15 @@
             <div class="check-item" data-check-id="sl-2"><span class="check-box"></span> Squad-Frequenz eingestellt</div>
             <div class="check-item" data-check-id="sl-3"><span class="check-box"></span> Brevity Codes durchgelesen</div>
         </section>
+
+        <section>
+            <h2>Eigene Punkte</h2>
+            <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+                <input type="text" id="new-check-text" placeholder="Neuer Punkt..." style="flex:1;padding:0.5rem;background:var(--bg-dark);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:inherit;">
+                <button onclick="addCheckItem()" style="padding:0.5rem 1rem;background:var(--accent);border:none;border-radius:4px;color:var(--bg-dark);font-weight:600;cursor:pointer;">Hinzufügen</button>
+            </div>
+            <div id="custom-check-list"></div>
+        </section>
     </div>
 
     <script src="csv-export.js"></script>
@@ -96,16 +107,63 @@
             updateCsvStorage({ checkliste: getChecklistData() });
         }
 
+        function addCheckItem() {
+            const inp = document.getElementById('new-check-text');
+            const text = (inp && inp.value || '').trim();
+            if (!text) return;
+            const data = loadFromCsvStorage();
+            const custom = data.checklisteCustom || [];
+            const id = 'custom-' + Date.now();
+            custom.push({ id, text, checked: false });
+            updateCsvStorage({ checklisteCustom: custom, checkliste: Object.assign({}, data.checkliste, { [id]: false }) });
+            renderCustomChecks(custom);
+            inp.value = '';
+        }
+
+        function removeCheckItem(id) {
+            const data = loadFromCsvStorage();
+            const custom = (data.checklisteCustom || []).filter(it => it.id !== id);
+            const ch = Object.assign({}, data.checkliste);
+            delete ch[id];
+            updateCsvStorage({ checklisteCustom: custom, checkliste: ch });
+            renderCustomChecks(custom);
+        }
+
+        function renderCustomChecks(custom) {
+            const container = document.getElementById('custom-check-list');
+            if (!container) return;
+            container.innerHTML = (custom || []).map(it => `
+                <div class="check-item" data-check-id="${it.id}">
+                    <span class="check-box"></span>
+                    <span class="check-text">${(it.text || '').replace(/</g, '&lt;')}</span>
+                    <button class="check-rm" onclick="event.stopPropagation(); removeCheckItem('${it.id}')" title="Entfernen">×</button>
+                </div>
+            `).join('');
+            container.querySelectorAll('.check-item').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('check-rm')) return;
+                    const box = el.querySelector('.check-box');
+                    box.classList.toggle('checked');
+                    saveChecklist();
+                });
+            });
+            setChecklistData(loadFromCsvStorage().checkliste);
+        }
+
         document.querySelectorAll('.check-item[data-check-id]').forEach(el => {
-            el.addEventListener('click', () => {
+            el.addEventListener('click', function(e) {
+                if (e.target.classList.contains('check-rm')) return;
                 const box = el.querySelector('.check-box');
                 box.classList.toggle('checked');
                 saveChecklist();
             });
         });
 
+        document.getElementById('new-check-text').addEventListener('keydown', e => { if (e.key === 'Enter') addCheckItem(); });
+
         const data = loadFromCsvStorage();
         if (data.checkliste && Object.keys(data.checkliste).length) setChecklistData(data.checkliste);
+        renderCustomChecks(data.checklisteCustom || []);
     </script>
 </body>
 </html>
