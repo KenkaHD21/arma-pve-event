@@ -57,7 +57,7 @@ function buildCsvFromData(data) {
   lines.push('[SLOTLISTE]');
   lines.push('Slot;Rolle;Name;Bemerkung');
   for (let i = 1; i <= SLOT_COUNT; i++) {
-    const s = sl[i] || {};
+    const s = sl[String(i)] || sl[i] || {};
     const role = s.role || SLOT_ROLES[i] || '';
     lines.push([i, escapeCsv(role), escapeCsv(s.name), escapeCsv(s.notes)].join(';'));
   }
@@ -146,18 +146,21 @@ function parseCsvSection(lines, startIdx) {
 
 function parseCsvSlotliste(lines, startIdx) {
   const data = {};
-  for (let i = startIdx + 1; i < lines.length; i++) {
+  const unq = s => (s || '').replace(/^"|"$/g, '').replace(/""/g, '"');
+  for (let i = startIdx + 2; i < lines.length; i++) {
     const line = lines[i];
     if (line.startsWith('[')) break;
     const parts = line.split(';');
     if (parts.length >= 4) {
-      const unq = s => (s || '').replace(/^"|"$/g, '').replace(/""/g, '"');
-      const slot = parts[0].trim();
-      data[slot] = {
-        role: unq(parts[1]),
-        name: unq(parts[2]),
-        notes: unq(parts.slice(3).join(';'))
-      };
+      const slotNum = parseInt(parts[0].trim(), 10);
+      if (slotNum >= 1 && slotNum <= SLOT_COUNT) {
+        const slot = String(slotNum);
+        data[slot] = {
+          role: unq(parts[1]),
+          name: unq(parts[2]),
+          notes: unq(parts.slice(3).join(';'))
+        };
+      }
     }
   }
   return data;

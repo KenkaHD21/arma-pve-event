@@ -295,8 +295,9 @@
             const data = {};
             const riflemanSlots = [8, 9, 11, 12, 16, 17, 19, 20, 24, 25, 27, 28, 32, 33, 35, 36];
             for (let i = 1; i <= 36; i++) {
-                data[i] = { name: '–', notes: '' };
-                if (riflemanSlots.indexOf(i) !== -1) data[i].role = 'Rifleman';
+                const key = String(i);
+                data[key] = { name: '–', notes: '' };
+                if (riflemanSlots.indexOf(i) !== -1) data[key].role = 'Rifleman';
             }
             setData(data);
             updateCsvStorage({ slotliste: data });
