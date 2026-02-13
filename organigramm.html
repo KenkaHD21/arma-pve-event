@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organigramm – PVE Event | Arma Reforger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --accent: #238636;
+            --accent-dim: #2ea043;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --border: #30363d;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+        header { text-align: center; padding: 1rem 0; border-bottom: 2px solid var(--accent); }
+        h1 { font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent); }
+        nav { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
+        nav a { color: var(--accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
+        nav a:hover { background: var(--accent); color: var(--bg-dark); }
+        .org-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .org-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+        .squad-group {
+            flex-shrink: 0;
+        }
+        @media (max-width: 900px) {
+            .org-row { gap: 1.5rem; }
+        }
+        .org-node {
+            background: var(--bg-dark);
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            padding: 0.75rem 1.25rem;
+            text-align: center;
+            min-width: 140px;
+        }
+        .org-node.platoon { border-color: var(--accent); background: rgba(35, 134, 54, 0.15); }
+        .org-node.squad { border-color: var(--accent-dim); }
+        .org-node.fireteam { border-color: var(--border); }
+        .org-node .role { font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+        .org-node .slot { font-size: 0.8rem; color: var(--text-muted); }
+        .org-node .count { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .connector {
+            width: 2px;
+            height: 24px;
+            background: var(--border);
+            margin: 0 auto;
+        }
+        .connector-h {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+        }
+        .connector-row { display: flex; align-items: center; justify-content: center; gap: 0; }
+        .connector-row .connector-h { flex: 1; max-width: 80px; }
+        .squad-group { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .ft-row { display: flex; gap: 1rem; justify-content: center; }
+        .legend {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+        .legend-dot.platoon { background: var(--accent); }
+        .legend-dot.squad { background: var(--accent-dim); }
+        .legend-dot.ft { background: var(--border); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ORGANIGRAMM – BEFEHLSSTRUKTUR</h1>
+        </header>
+        <nav>
+            <a href="index.html">Übersicht</a>
+            <a href="organigramm.html">Organigramm</a>
+            <a href="funk.html">Funkplan</a>
+            <a href="slotliste.html">Slotliste</a>
+            <a href="mods.html">Mods</a>
+            <a href="ladef.html">LADEF</a>
+            <a href="checkliste.html">Checkliste</a>
+        </nav>
+
+        <div class="org-wrapper">
+            <div class="org-chart">
+                <!-- Platoon -->
+                <div class="org-node platoon">
+                    <div class="role">PLATOON LEAD (PL)</div>
+                    <div class="slot">Zugführer</div>
+                    <div class="count">1 Slot</div>
+                </div>
+                <div class="connector"></div>
+                <div class="connector-row">
+                    <div class="connector-h"></div>
+                    <div class="connector-h"></div>
+                    <div class="connector-h"></div>
+                    <div class="connector-h"></div>
+                </div>
+                <div class="connector"></div>
+
+                <!-- Squads -->
+                <div class="org-row">
+                    <div class="squad-group">
+                        <div class="org-node squad">
+                            <div class="role">SQUAD 1 (ALPHA)</div>
+                            <div class="slot">SL + Medic</div>
+                            <div class="count">8–10 Mann</div>
+                        </div>
+                        <div class="connector"></div>
+                        <div class="ft-row">
+                            <div class="org-node fireteam">
+                                <div class="role">FT ALPHA</div>
+                                <div class="slot">FTL-A + 3</div>
+                            </div>
+                            <div class="org-node fireteam">
+                                <div class="role">FT BRAVO</div>
+                                <div class="slot">FTL-B + 3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="squad-group">
+                        <div class="org-node squad">
+                            <div class="role">SQUAD 2 (BRAVO)</div>
+                            <div class="slot">SL + Medic</div>
+                            <div class="count">8–10 Mann</div>
+                        </div>
+                        <div class="connector"></div>
+                        <div class="ft-row">
+                            <div class="org-node fireteam">
+                                <div class="role">FT ALPHA</div>
+                                <div class="slot">FTL-A + 3</div>
+                            </div>
+                            <div class="org-node fireteam">
+                                <div class="role">FT BRAVO</div>
+                                <div class="slot">FTL-B + 3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="squad-group">
+                        <div class="org-node squad">
+                            <div class="role">SQUAD 3 (CHARLIE)</div>
+                            <div class="slot">SL + Medic</div>
+                            <div class="count">8–10 Mann</div>
+                        </div>
+                        <div class="connector"></div>
+                        <div class="ft-row">
+                            <div class="org-node fireteam">
+                                <div class="role">FT ALPHA</div>
+                                <div class="slot">FTL-A + 3</div>
+                            </div>
+                            <div class="org-node fireteam">
+                                <div class="role">FT BRAVO</div>
+                                <div class="slot">FTL-B + 3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="squad-group">
+                        <div class="org-node squad">
+                            <div class="role">SQUAD 4 (DELTA)</div>
+                            <div class="slot">SL + Medic</div>
+                            <div class="count">8–10 Mann</div>
+                        </div>
+                        <div class="connector"></div>
+                        <div class="ft-row">
+                            <div class="org-node fireteam">
+                                <div class="role">FT ALPHA</div>
+                                <div class="slot">FTL-A + 3</div>
+                            </div>
+                            <div class="org-node fireteam">
+                                <div class="role">FT BRAVO</div>
+                                <div class="slot">FTL-B + 3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><span class="legend-dot platoon"></span> Platoon (Zug)</div>
+                <div class="legend-item"><span class="legend-dot squad"></span> Squad (Gruppe)</div>
+                <div class="legend-item"><span class="legend-dot ft"></span> Fire Team</div>
+            </div>
+        </div>
+
+        <section style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1rem;">
+            <h2 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.75rem;">Befehlsweg</h2>
+            <p>PL → SL → FTL → Mannschaft. Meldungen laufen von unten nach oben, Befehle von oben nach unten. Bei Abwesenheit des PL übernimmt der dienstälteste SL.</p>
+        </section>
+    </div>
+</body>
+</html>

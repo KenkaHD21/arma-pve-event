@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funkplan – PVE Event | Arma Reforger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --accent: #238636;
+            --accent-dim: #2ea043;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --border: #30363d;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        header { text-align: center; padding: 1rem 0; border-bottom: 2px solid var(--accent); }
+        h1 { font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent); }
+        nav { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
+        nav a { color: var(--accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
+        nav a:hover { background: var(--accent); color: var(--bg-dark); }
+        section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 { color: var(--accent); font-size: 1.1rem; margin-bottom: 1rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--accent); font-weight: 600; }
+        .mono { font-family: 'Share Tech Mono', monospace; font-size: 1.05rem; }
+        .freq { color: var(--accent-dim); }
+        .note { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem; }
+        .radio-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .radio-card {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent);
+        }
+        .radio-card strong { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FUNKPLAN – KOMMUNIKATION</h1>
+        </header>
+        <nav>
+            <a href="index.html">Übersicht</a>
+            <a href="organigramm.html">Organigramm</a>
+            <a href="funk.html">Funkplan</a>
+            <a href="slotliste.html">Slotliste</a>
+            <a href="mods.html">Mods</a>
+            <a href="ladef.html">LADEF</a>
+            <a href="checkliste.html">Checkliste</a>
+        </nav>
+
+        <section>
+            <h2>Frequenzübersicht – Arma Reforger + ACE Radio / WCS</h2>
+            <p class="note" style="margin-bottom: 1rem;">Frequenzschritt: 0,1 MHz (100 kHz). Alle Frequenzen 32–68 MHz.</p>
+            <table>
+                <tr>
+                    <th>Netz</th>
+                    <th>MHz (Primär)</th>
+                    <th>MHz (Ausweich)</th>
+                    <th>Teilnehmer</th>
+                </tr>
+                <tr>
+                    <td><strong>Command (PL + SLs)</strong></td>
+                    <td class="mono freq">40.0</td>
+                    <td class="mono freq">36.0</td>
+                    <td>Nur PL + alle Gruppenführer (SLs)</td>
+                </tr>
+                <tr>
+                    <td><strong>JTAC</strong></td>
+                    <td class="mono freq">44.0</td>
+                    <td class="mono freq">42.0</td>
+                    <td>JTAC, PL, ggf. Luftunterstützung</td>
+                </tr>
+                <tr>
+                    <td><strong>Squad 1 (Alpha)</strong></td>
+                    <td class="mono freq">48.0</td>
+                    <td class="mono freq">52.0</td>
+                    <td>SL1, FTL-A, FTL-B, Medic, Mannschaft</td>
+                </tr>
+                <tr>
+                    <td><strong>Squad 2 (Bravo)</strong></td>
+                    <td class="mono freq">54.0</td>
+                    <td class="mono freq">58.0</td>
+                    <td>SL2, FTL-A, FTL-B, Medic, Mannschaft</td>
+                </tr>
+                <tr>
+                    <td><strong>Squad 3 (Charlie)</strong></td>
+                    <td class="mono freq">60.0</td>
+                    <td class="mono freq">64.0</td>
+                    <td>SL3, FTL-A, FTL-B, Medic, Mannschaft</td>
+                </tr>
+                <tr>
+                    <td><strong>Squad 4 (Delta)</strong></td>
+                    <td class="mono freq">66.0</td>
+                    <td class="mono freq">68.0</td>
+                    <td>SL4, FTL-A, FTL-B, Medic, Mannschaft</td>
+                </tr>
+            </table>
+            <p class="note">Jedes Squad hat eigene Primär- und Ausweichfrequenz. Command und JTAC: separate Netze.</p>
+        </section>
+
+        <section>
+            <h2>Funkgerätetypen (Vanilla + Mods)</h2>
+            <div class="radio-types">
+                <div class="radio-card">
+                    <strong>AN/PRC-68</strong><br>
+                    Personal Radio. 10 Kanäle, feste Frequenzen.
+                </div>
+                <div class="radio-card">
+                    <strong>AN/PRC-77</strong><br>
+                    VHF Manpack. MHz + kHz Einstellung.
+                </div>
+                <div class="radio-card">
+                    <strong>R-148</strong><br>
+                    Sowjetisches Handheld. 15×20 Schritte.
+                </div>
+                <div class="radio-card">
+                    <strong>R-107M</strong><br>
+                    Manpack, erweiterte Reichweite.
+                </div>
+                <div class="radio-card">
+                    <strong>ACE Radio Dev</strong><br>
+                    Erweiterte Funk-Features, kompatibel mit obigen Frequenzen.
+                </div>
+            </div>
+        </section>
+
+
+        <section>
+            <h2>Funkdisziplin & Brevity Codes</h2>
+            <table>
+                <tr><th>Code</th><th>Bedeutung</th></tr>
+                <tr><td>Contact</td><td>Feindkontakt</td></tr>
+                <tr><td>Moving</td><td>In Bewegung</td></tr>
+                <tr><td>In Position</td><td>Am Zielort</td></tr>
+                <tr><td>Roger / Wilco</td><td>Verstanden / Wird ausgeführt</td></tr>
+                <tr><td>Say Again</td><td>Wiederholen</td></tr>
+                <tr><td>Break, Break</td><td>Wichtige Unterbrechung</td></tr>
+                <tr><td>Over</td><td>Ende meiner Meldung, Antwort erwartet</td></tr>
+                <tr><td>Out</td><td>Ende, keine Antwort nötig</td></tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Steuerung (Arma Reforger)</h2>
+            <ul style="margin-left: 1.5rem;">
+                <li><strong>G</strong> – Kanal/Frequenz auswählen</li>
+                <li><strong>CAPS LOCK</strong> – Senden (PTT)</li>
+                <li><strong>T</strong> – Proximity Chat (Nahbereich)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Kommunikations-relevante Mods</h2>
+            <ul style="margin-left: 1.5rem;">
+                <li><strong>ACE Radio Dev</strong> – Erweiterte Funk-Funktionen</li>
+                <li><strong>WCS_Earplugs</strong> – Ohrstöpsel, beeinflusst Hörbarkeit</li>
+                <li><strong>Disable Enemy Proximity VON UI</strong> – Blendet VON-Indikatoren bei Feinden aus</li>
+                <li><strong>BetterSounds Voice overhaul</strong> – Verbesserte Sprachqualität</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>

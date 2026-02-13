@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LADEF – PVE Event | Arma Reforger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --accent: #238636;
+            --accent-dim: #2ea043;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --border: #30363d;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        header { text-align: center; padding: 1rem 0; border-bottom: 2px solid var(--accent); }
+        h1 { font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent); }
+        nav { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
+        nav a { color: var(--accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
+        nav a:hover { background: var(--accent); color: var(--bg-dark); }
+        .ladef-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .ladef-section h2 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .ladef-section .letter {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+        textarea:focus { outline: none; border-color: var(--accent); }
+        textarea::placeholder { color: var(--text-muted); }
+        .btn-row { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 4px;
+            color: var(--bg-dark);
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn:hover { background: var(--accent-dim); }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+        .btn-outline:hover { background: rgba(35, 134, 54, 0.2); }
+        .hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LADEF – 5-ABSATZ-BEFEHL</h1>
+            <p class="hint" style="margin-top: 0.5rem;">Lage – Auftrag – Durchführung – Einsatz – Führung</p>
+        </header>
+        <nav>
+            <a href="index.html">Übersicht</a>
+            <a href="organigramm.html">Organigramm</a>
+            <a href="funk.html">Funkplan</a>
+            <a href="slotliste.html">Slotliste</a>
+            <a href="mods.html">Mods</a>
+            <a href="ladef.html">LADEF</a>
+            <a href="checkliste.html">Checkliste</a>
+        </nav>
+
+        <div class="btn-row">
+            <button class="btn" onclick="saveAll()">Speichern</button>
+            <button class="btn btn-outline" onclick="clearAll()">Zurücksetzen</button>
+        </div>
+
+        <div class="ladef-section">
+            <h2><span class="letter">L</span>Lage</h2>
+            <p class="hint">Feindlage, eigene Lage, Gelände, Wetter. Was ist die aktuelle Situation?</p>
+            <textarea id="lage" placeholder="z.B.: Feindliche Kräfte in Stellung bei [Ort]. Eigene Kräfte: 1 Zug, 4 Squads. Gelände: urban, Gebäude. Wetter: klar, Sicht gut."></textarea>
+        </div>
+
+        <div class="ladef-section">
+            <h2><span class="letter">A</span>Auftrag</h2>
+            <p class="hint">Was ist die Mission? Wer, Wann, Wo, Was, Warum?</p>
+            <textarea id="auftrag" placeholder="z.B.: Der Zug nimmt [Ziel] ein und sichert es bis zum Eintreffen der Verstärkung. Absicht: Feind aus Stellung entfernen, Gebiet sichern."></textarea>
+        </div>
+
+        <div class="ladef-section">
+            <h2><span class="letter">D</span>Durchführung</h2>
+            <p class="hint">Ablauf, Abfolge, Einzelaufträge an Squads. Wie wird der Auftrag ausgeführt?</p>
+            <textarea id="durchfuehrung" placeholder="z.B.: Phase 1: Squad 1+2 Vorstoß Nord. Phase 2: Squad 3+4 Flankensicherung. Phase 3: Zusammenziehen, Ziel einnehmen. Phase 4: Sichern."></textarea>
+        </div>
+
+        <div class="ladef-section">
+            <h2><span class="letter">E</span>Einsatz / Versorgung</h2>
+            <p class="hint">Logistik, Versorgung, Verwundetenabtransport, Respawn, Munition.</p>
+            <textarea id="einsatz" placeholder="z.B.: Medics bei jedem Squad. Respawn-Punkt: [Ort]. Munitionsnachschub nach Phase 2. Verpflegung am Ende."></textarea>
+        </div>
+
+        <div class="ladef-section">
+            <h2><span class="letter">F</span>Führung</h2>
+            <p class="hint">Befehlsweg, Funk, Kommunikation, Kommandoübernahme.</p>
+            <textarea id="fuehrung" placeholder="z.B.: PL führt Zug. Befehlskette: PL → SL → FTL. Funk: Command 40.0 MHz, Squad 1–4 siehe Funkplan. Kommandoübernahme: SL1 bei Ausfall PL."></textarea>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'pve-ladef-data';
+
+        function getData() {
+            return {
+                lage: document.getElementById('lage').value,
+                auftrag: document.getElementById('auftrag').value,
+                durchfuehrung: document.getElementById('durchfuehrung').value,
+                einsatz: document.getElementById('einsatz').value,
+                fuehrung: document.getElementById('fuehrung').value
+            };
+        }
+
+        function setData(data) {
+            if (!data) return;
+            document.getElementById('lage').value = data.lage || '';
+            document.getElementById('auftrag').value = data.auftrag || '';
+            document.getElementById('durchfuehrung').value = data.durchfuehrung || '';
+            document.getElementById('einsatz').value = data.einsatz || '';
+            document.getElementById('fuehrung').value = data.fuehrung || '';
+        }
+
+        function saveAll() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(getData()));
+            const btn = document.querySelector('.btn');
+            const orig = btn.textContent;
+            btn.textContent = 'Gespeichert!';
+            setTimeout(() => btn.textContent = orig, 1500);
+        }
+
+        function clearAll() {
+            if (!confirm('Alle LADEF-Einträge löschen?')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            document.querySelectorAll('textarea').forEach((el) => el.value = '');
+        }
+
+        document.querySelectorAll('textarea').forEach((el) => {
+            el.addEventListener('input', () => { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(saveAll, 500); });
+        });
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) setData(JSON.parse(saved));
+    </script>
+</body>
+</html>

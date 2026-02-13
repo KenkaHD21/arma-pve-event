@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slotliste – PVE Event | Arma Reforger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --accent: #238636;
+            --accent-dim: #2ea043;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --border: #30363d;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+        header { text-align: center; padding: 1rem 0; border-bottom: 2px solid var(--accent); }
+        h1 { font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent); }
+        nav { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
+        nav a { color: var(--accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
+        nav a:hover { background: var(--accent); color: var(--bg-dark); }
+        section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h2 { color: var(--accent); font-size: 1.1rem; margin-bottom: 1rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+        td { font-size: 0.95rem; }
+        .slot-role { font-weight: 600; color: var(--accent-dim); width: 40px; }
+        input, select {
+            width: 100%;
+            min-width: 120px;
+            padding: 0.5rem 0.6rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        input::placeholder { color: var(--text-muted); }
+        .input-name { min-width: 140px; }
+        .input-notes { min-width: 100px; font-size: 0.85rem; }
+        .btn-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 4px;
+            color: var(--bg-dark);
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .btn:hover { background: var(--accent-dim); }
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        .btn-outline:hover { background: rgba(35, 134, 54, 0.2); }
+        .save-hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SLOTLISTE – 20–40 SPIELER</h1>
+        </header>
+        <nav>
+            <a href="index.html">Übersicht</a>
+            <a href="organigramm.html">Organigramm</a>
+            <a href="funk.html">Funkplan</a>
+            <a href="slotliste.html">Slotliste</a>
+            <a href="mods.html">Mods</a>
+            <a href="ladef.html">LADEF</a>
+            <a href="checkliste.html">Checkliste</a>
+        </nav>
+
+        <div class="btn-row">
+            <button class="btn" onclick="saveAll()">Speichern</button>
+            <button class="btn btn-outline" onclick="clearAll()">Zurücksetzen</button>
+            <button class="btn btn-outline" onclick="exportData()">Export (JSON)</button>
+            <span class="save-hint">Einträge werden automatisch gespeichert.</span>
+        </div>
+
+        <section>
+            <h2>Platoon (Zug)</h2>
+            <table>
+                <tr><th>Slot</th><th>Rolle</th><th>Spieler</th><th>Bemerkung</th><th>Funk</th></tr>
+                <tr data-slot="1">
+                    <td class="slot-role">1</td>
+                    <td>Platoon Lead (PL)</td>
+                    <td><input type="text" class="input-name" data-field="name" placeholder="Name eintragen" maxlength="40"></td>
+                    <td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td>
+                    <td>Command</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Squad 1 – Alpha</h2>
+            <table>
+                <tr><th>Slot</th><th>Rolle</th><th>Spieler</th><th>Bemerkung</th><th>Funk</th></tr>
+                <tr data-slot="2"><td class="slot-role">2</td><td>Squad Lead (SL)</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Command + Squad 1</td></tr>
+                <tr data-slot="3"><td class="slot-role">3</td><td>Medic</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+                <tr data-slot="4"><td class="slot-role">4</td><td>FTL Alpha</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+                <tr data-slot="5"><td class="slot-role">5</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+                <tr data-slot="6"><td class="slot-role">6</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+                <tr data-slot="7"><td class="slot-role">7</td><td>FTL Bravo</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+                <tr data-slot="8"><td class="slot-role">8</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+                <tr data-slot="9"><td class="slot-role">9</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 1</td></tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Squad 2 – Bravo</h2>
+            <table>
+                <tr><th>Slot</th><th>Rolle</th><th>Spieler</th><th>Bemerkung</th><th>Funk</th></tr>
+                <tr data-slot="10"><td class="slot-role">10</td><td>Squad Lead (SL)</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Command + Squad 2</td></tr>
+                <tr data-slot="11"><td class="slot-role">11</td><td>Medic</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+                <tr data-slot="12"><td class="slot-role">12</td><td>FTL Alpha</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+                <tr data-slot="13"><td class="slot-role">13</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+                <tr data-slot="14"><td class="slot-role">14</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+                <tr data-slot="15"><td class="slot-role">15</td><td>FTL Bravo</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+                <tr data-slot="16"><td class="slot-role">16</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+                <tr data-slot="17"><td class="slot-role">17</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 2</td></tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Squad 3 – Charlie (bei 25+ Spielern)</h2>
+            <table>
+                <tr><th>Slot</th><th>Rolle</th><th>Spieler</th><th>Bemerkung</th><th>Funk</th></tr>
+                <tr data-slot="18"><td class="slot-role">18</td><td>Squad Lead (SL)</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Command + Squad 3</td></tr>
+                <tr data-slot="19"><td class="slot-role">19</td><td>Medic</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+                <tr data-slot="20"><td class="slot-role">20</td><td>FTL Alpha</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+                <tr data-slot="21"><td class="slot-role">21</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+                <tr data-slot="22"><td class="slot-role">22</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+                <tr data-slot="23"><td class="slot-role">23</td><td>FTL Bravo</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+                <tr data-slot="24"><td class="slot-role">24</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+                <tr data-slot="25"><td class="slot-role">25</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 3</td></tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Squad 4 – Delta (bei 33+ Spielern)</h2>
+            <table>
+                <tr><th>Slot</th><th>Rolle</th><th>Spieler</th><th>Bemerkung</th><th>Funk</th></tr>
+                <tr data-slot="26"><td class="slot-role">26</td><td>Squad Lead (SL)</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Command + Squad 4</td></tr>
+                <tr data-slot="27"><td class="slot-role">27</td><td>Medic</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+                <tr data-slot="28"><td class="slot-role">28</td><td>FTL Alpha</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+                <tr data-slot="29"><td class="slot-role">29</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+                <tr data-slot="30"><td class="slot-role">30</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+                <tr data-slot="31"><td class="slot-role">31</td><td>FTL Bravo</td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+                <tr data-slot="32"><td class="slot-role">32</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+                <tr data-slot="33"><td class="slot-role">33</td><td><select data-field="role"><option value="Rifleman">Rifleman</option><option value="Grenadier">Grenadier</option><option value="AT">AT</option></select></td><td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td><td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td><td>Squad 4</td></tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Reserve / Flex (34–40 Spieler)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Zusätzliche Slots können als Reserve oder zur Aufstockung der Squads genutzt werden.</p>
+        </section>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'pve-slotliste-data';
+
+        function getData() {
+            const data = {};
+            document.querySelectorAll('tr[data-slot]').forEach(tr => {
+                const slot = tr.dataset.slot;
+                data[slot] = {};
+                tr.querySelectorAll('[data-field]').forEach(el => {
+                    const field = el.dataset.field;
+                    const val = el.tagName === 'SELECT' ? el.value : el.value.trim();
+                    data[slot][field] = val;
+                });
+            });
+            return data;
+        }
+
+        function setData(data) {
+            if (!data) return;
+            document.querySelectorAll('tr[data-slot]').forEach(tr => {
+                const slot = tr.dataset.slot;
+                if (!data[slot]) return;
+                tr.querySelectorAll('[data-field]').forEach(el => {
+                    const field = el.dataset.field;
+                    const val = data[slot][field];
+                    if (val === undefined) return;
+                    if (el.tagName === 'SELECT') el.value = val;
+                    else el.value = val;
+                });
+            });
+        }
+
+        function saveAll() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(getData()));
+            const btn = document.querySelector('.btn');
+            const orig = btn.textContent;
+            btn.textContent = 'Gespeichert!';
+            setTimeout(() => btn.textContent = orig, 1500);
+        }
+
+        function clearAll() {
+            if (!confirm('Alle Einträge wirklich löschen?')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            document.querySelectorAll('input[data-field], select[data-field]').forEach(el => {
+                if (el.tagName === 'SELECT') el.selectedIndex = 0;
+                else el.value = '';
+            });
+        }
+
+        function exportData() {
+            const data = getData();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'slotliste-pve-' + new Date().toISOString().slice(0,10) + '.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        document.querySelectorAll('input[data-field], select[data-field]').forEach(el => {
+            el.addEventListener('change', saveAll);
+            el.addEventListener('input', () => { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(saveAll, 500); });
+        });
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) setData(JSON.parse(saved));
+    </script>
+</body>
+</html>
