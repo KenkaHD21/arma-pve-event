@@ -11,14 +11,15 @@ const STORAGE_KEYS_LEGACY = {
 };
 
 const SLOT_ROLES = {
-  1: 'Platoon Lead (PL)', 2: 'Squad Lead (SL)', 3: 'Medic', 4: 'FTL Alpha',
-  5: 'Rifleman', 6: 'Rifleman', 7: 'FTL Bravo', 8: 'Rifleman', 9: 'Rifleman',
-  10: 'Squad Lead (SL)', 11: 'Medic', 12: 'FTL Alpha', 13: 'Rifleman', 14: 'Rifleman',
-  15: 'FTL Bravo', 16: 'Rifleman', 17: 'Rifleman', 18: 'Squad Lead (SL)', 19: 'Medic',
-  20: 'FTL Alpha', 21: 'Rifleman', 22: 'Rifleman', 23: 'FTL Bravo', 24: 'Rifleman',
-  25: 'Rifleman', 26: 'Squad Lead (SL)', 27: 'Medic', 28: 'FTL Alpha', 29: 'Rifleman',
-  30: 'Rifleman', 31: 'FTL Bravo', 32: 'Rifleman', 33: 'Rifleman',
-  34: 'JTAC', 35: 'Medic (Platoon)', 36: 'Schütze (Platoon)'
+  1: 'Platoon Lead (PL)', 2: 'JTAC', 3: 'Medic (Platoon)', 4: 'Schütze (Platoon)',
+  5: 'Squad Lead (SL)', 6: 'Medic', 7: 'FTL Alpha', 8: 'Rifleman', 9: 'Rifleman',
+  10: 'FTL Bravo', 11: 'Rifleman', 12: 'Rifleman',
+  13: 'Squad Lead (SL)', 14: 'Medic', 15: 'FTL Alpha', 16: 'Rifleman', 17: 'Rifleman',
+  18: 'FTL Bravo', 19: 'Rifleman', 20: 'Rifleman',
+  21: 'Squad Lead (SL)', 22: 'Medic', 23: 'FTL Alpha', 24: 'Rifleman', 25: 'Rifleman',
+  26: 'FTL Bravo', 27: 'Rifleman', 28: 'Rifleman',
+  29: 'Squad Lead (SL)', 30: 'Medic', 31: 'FTL Alpha', 32: 'Rifleman', 33: 'Rifleman',
+  34: 'FTL Bravo', 35: 'Rifleman', 36: 'Rifleman'
 };
 
 const SLOT_COUNT = 36;
