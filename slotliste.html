@@ -105,6 +105,7 @@
 
         <div class="btn-row">
             <button class="btn" onclick="saveAll()">Speichern</button>
+            <button class="btn btn-outline" onclick="fillPlaceholders()">Mit Platzhalter füllen</button>
             <button class="btn btn-outline" onclick="clearAll()">Zurücksetzen</button>
             <button class="btn btn-outline" onclick="exportData()">Export CSV</button>
             <span class="save-hint">Einträge werden automatisch gespeichert.</span>
@@ -290,6 +291,17 @@
             setTimeout(() => btn.textContent = orig, 1500);
         }
 
+        function fillPlaceholders() {
+            const data = {};
+            for (let i = 1; i <= 36; i++) {
+                data[i] = { name: '–', notes: '' };
+                if ([5, 6, 8, 9, 13, 14, 16, 17, 21, 22, 24, 25, 29, 30, 32, 33].indexOf(i) !== -1) data[i].role = 'Rifleman';
+            }
+            setData(data);
+            updateCsvStorage({ slotliste: data });
+            updateSlotStat();
+        }
+
         function clearAll() {
             if (!confirm('Alle Einträge wirklich löschen?')) return;
             updateCsvStorage({ slotliste: {} });
@@ -309,7 +321,11 @@
         });
 
         const data = loadFromCsvStorage();
-        if (data.slotliste && Object.keys(data.slotliste).length) setData(data.slotliste);
+        if (data.slotliste && Object.keys(data.slotliste).length) {
+            setData(data.slotliste);
+        } else {
+            fillPlaceholders();
+        }
         updateSlotStat();
     </script>
 </body>
