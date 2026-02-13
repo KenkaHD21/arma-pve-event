@@ -78,7 +78,7 @@
         </nav>
 
         <div class="btn-row">
-            <button class="btn btn-outline" onclick="addSquad()">+ Squad hinzufügen</button>
+            <button type="button" class="btn btn-outline" id="btn-add-squad">+ Squad hinzufügen</button>
         </div>
 
         <div class="org-wrapper">
@@ -180,24 +180,35 @@
         }
 
         function addSquad() {
-            const data = loadFromCsvStorage();
-            const org = data.organigramm && data.organigramm.squads && data.organigramm.squads.length
-                ? data.organigramm
-                : DEFAULT_ORGANIGRAMM;
-            const squads = (org.squads || []).map(s => ({
-                title: s.title || '',
-                subtitle: s.subtitle || '',
-                ftAlpha: s.ftAlpha ? { title: s.ftAlpha.title || '', subtitle: s.ftAlpha.subtitle || '' } : { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
-                ftBravo: s.ftBravo ? { title: s.ftBravo.title || '', subtitle: s.ftBravo.subtitle || '' } : { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
-            }));
-            squads.push({
-                title: 'SQUAD ' + (squads.length + 1),
-                subtitle: 'SL + Medic',
-                ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
-                ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
-            });
-            updateCsvStorage({ organigramm: { platoon: org.platoon || DEFAULT_ORGANIGRAMM.platoon, squads } });
-            render();
+            try {
+                const def = typeof DEFAULT_ORGANIGRAMM !== 'undefined' ? DEFAULT_ORGANIGRAMM : {
+                    platoon: { title: 'PLATOON LEAD (PL)', subtitle: 'Zugführer' },
+                    squads: [
+                        { title: 'SQUAD 1 (ALPHA)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+                        { title: 'SQUAD 2 (BRAVO)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+                        { title: 'SQUAD 3 (CHARLIE)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+                        { title: 'SQUAD 4 (DELTA)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } }
+                    ]
+                };
+                const current = getOrganigrammData();
+                const squads = (current.squads || []).map(s => ({
+                    title: s.title || '',
+                    subtitle: s.subtitle || '',
+                    ftAlpha: s.ftAlpha ? { title: s.ftAlpha.title || '', subtitle: s.ftAlpha.subtitle || '' } : { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
+                    ftBravo: s.ftBravo ? { title: s.ftBravo.title || '', subtitle: s.ftBravo.subtitle || '' } : { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
+                }));
+                squads.push({
+                    title: 'SQUAD ' + (squads.length + 1),
+                    subtitle: 'SL + Medic',
+                    ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
+                    ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
+                });
+                const newOrg = { platoon: current.platoon || def.platoon, squads };
+                updateCsvStorage({ organigramm: newOrg });
+                render();
+            } catch (e) {
+                console.error('addSquad Fehler:', e);
+            }
         }
 
         function removeSquad(idx) {
@@ -208,6 +219,21 @@
             render();
         }
 
+        document.getElementById('btn-add-squad').addEventListener('click', addSquad);
+
+        const initData = loadFromCsvStorage();
+        if (!initData.organigramm || !initData.organigramm.squads || initData.organigramm.squads.length === 0) {
+            const def = typeof DEFAULT_ORGANIGRAMM !== 'undefined' ? DEFAULT_ORGANIGRAMM : {
+                platoon: { title: 'PLATOON LEAD (PL)', subtitle: 'Zugführer' },
+                squads: [
+                    { title: 'SQUAD 1 (ALPHA)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+                    { title: 'SQUAD 2 (BRAVO)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+                    { title: 'SQUAD 3 (CHARLIE)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+                    { title: 'SQUAD 4 (DELTA)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } }
+                ]
+            };
+            updateCsvStorage({ organigramm: def });
+        }
         render();
     </script>
 </body>
