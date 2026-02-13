@@ -109,6 +109,19 @@ function buildCsvFromData(data) {
     lines.push('');
   }
 
+  const org = data.organigramm && data.organigramm.squads ? data.organigramm : DEFAULT_ORGANIGRAMM;
+  const platoon = org.platoon || DEFAULT_ORGANIGRAMM.platoon;
+  const squads = org.squads || DEFAULT_ORGANIGRAMM.squads;
+  lines.push('[ORGANIGRAMM]');
+  lines.push('Platoon;Titel;Untertitel');
+  lines.push(escapeCsv(platoon.title || '') + ';' + escapeCsv(platoon.subtitle || ''));
+  lines.push('Squad;Titel;Untertitel;FTAlpha;FTAlphaSub;FTBravo;FTBravoSub');
+  (squads || []).forEach(s => {
+    const fa = s.ftAlpha || {}, fb = s.ftBravo || {};
+    lines.push([escapeCsv(s.title), escapeCsv(s.subtitle), escapeCsv(fa.title), escapeCsv(fa.subtitle), escapeCsv(fb.title), escapeCsv(fb.subtitle)].join(';'));
+  });
+  lines.push('');
+
   return lines.join('\r\n');
 }
 
@@ -227,9 +240,51 @@ function parseCsvToData(csvText) {
     } else if (lines[i] === '[RESPAWN]') {
       const d = parseCsvSection(lines, i + 1);
       data.respawn = d.Regeln || '';
+    } else if (lines[i] === '[ORGANIGRAMM]') {
+      data.organigramm = parseCsvOrganigramm(lines, i);
     }
   }
   return data;
+}
+
+const DEFAULT_ORGANIGRAMM = {
+  platoon: { title: 'PLATOON LEAD (PL)', subtitle: 'Zugführer' },
+  squads: [
+    { title: 'SQUAD 1 (ALPHA)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+    { title: 'SQUAD 2 (BRAVO)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+    { title: 'SQUAD 3 (CHARLIE)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } },
+    { title: 'SQUAD 4 (DELTA)', subtitle: 'SL + Medic', ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' }, ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' } }
+  ]
+};
+
+function parseCsvOrganigramm(lines, startIdx) {
+  const unq = s => (s || '').replace(/^"|"$/g, '').replace(/""/g, '"');
+  let platoon = { title: 'PLATOON LEAD (PL)', subtitle: 'Zugführer' };
+  const squads = [];
+  let i = startIdx + 1;
+  if (lines[i] && lines[i].startsWith('Platoon;')) {
+    i++;
+    if (lines[i] && !lines[i].startsWith('[')) {
+      const p = lines[i].split(';').map(s => unq(s));
+      if (p.length >= 2) { platoon = { title: p[0], subtitle: p[1] }; }
+      i++;
+    }
+  }
+  if (lines[i] && lines[i].startsWith('Squad;')) {
+    i++;
+    while (lines[i] && !lines[i].startsWith('[')) {
+      const p = lines[i].split(';').map(s => unq(s));
+      if (p.length >= 6) {
+        squads.push({
+          title: p[0], subtitle: p[1],
+          ftAlpha: { title: p[2] || '', subtitle: p[3] || '' },
+          ftBravo: { title: p[4] || '', subtitle: p[5] || '' }
+        });
+      }
+      i++;
+    }
+  }
+  return { platoon, squads: squads.length ? squads : DEFAULT_ORGANIGRAMM.squads };
 }
 
 function parseCsvFunk(lines, startIdx) {
@@ -366,7 +421,7 @@ function loadFromCsvStorage() {
       [STORAGE_KEYS_LEGACY.event, STORAGE_KEYS_LEGACY.slotliste, STORAGE_KEYS_LEGACY.ladef].forEach(k => localStorage.removeItem(k));
     }
   }
-  const def = { event: {}, slotliste: {}, ladef: {}, checkliste: {}, checklisteCustom: [], funk: [], mods: [], brevity: [], respawn: '' };
+  const def = { event: {}, slotliste: {}, ladef: {}, checkliste: {}, checklisteCustom: [], funk: [], mods: [], brevity: [], respawn: '', organigramm: null };
   return csv ? Object.assign(def, parseCsvToData(csv)) : def;
 }
 
@@ -388,6 +443,7 @@ function updateCsvStorage(partial) {
   if (partial.mods !== undefined) data.mods = partial.mods;
   if (partial.brevity !== undefined) data.brevity = partial.brevity;
   if (partial.respawn !== undefined) data.respawn = partial.respawn;
+  if (partial.organigramm !== undefined) data.organigramm = partial.organigramm;
   saveToCsvStorage(data);
 }
 

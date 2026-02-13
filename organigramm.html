@@ -18,81 +18,45 @@
             --border: #30363d;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
-            min-height: 100vh;
-        }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
         .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
         header { text-align: center; padding: 1rem 0; border-bottom: 2px solid var(--accent); }
         h1 { font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent); }
         nav { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; flex-wrap: wrap; }
         nav a { color: var(--accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
         nav a:hover { background: var(--accent); color: var(--bg-dark); }
-        .org-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-        .org-chart {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-        }
-        .org-row {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 1.5rem;
-            margin: 0.5rem 0;
-            flex-wrap: wrap;
-        }
-        .squad-group {
-            flex-shrink: 0;
-        }
-        @media (max-width: 900px) {
-            .org-row { gap: 1.5rem; }
-        }
+        .org-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; margin: 2rem 0; }
+        .org-chart { display: flex; flex-direction: column; align-items: center; gap: 0; }
+        .org-row { display: flex; justify-content: center; align-items: flex-start; gap: 1.5rem; margin: 0.5rem 0; flex-wrap: wrap; }
+        .squad-group { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; flex-shrink: 0; }
         .org-node {
             background: var(--bg-dark);
             border: 2px solid var(--accent);
             border-radius: 6px;
-            padding: 0.75rem 1.25rem;
+            padding: 0.5rem 0.75rem;
             text-align: center;
             min-width: 140px;
         }
         .org-node.platoon { border-color: var(--accent); background: rgba(35, 134, 54, 0.15); }
         .org-node.squad { border-color: var(--accent-dim); }
         .org-node.fireteam { border-color: var(--border); }
-        .org-node .role { font-weight: 700; color: var(--accent); font-size: 0.95rem; }
-        .org-node .slot { font-size: 0.8rem; color: var(--text-muted); }
-        .org-node .count { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
-        .connector {
-            width: 2px;
-            height: 24px;
-            background: var(--border);
-            margin: 0 auto;
+        .org-node input {
+            background: transparent; border: none; color: inherit; width: 100%; font: inherit; text-align: center;
+            font-weight: 700; color: var(--accent); font-size: 0.95rem;
         }
-        .connector-h {
-            width: 60px;
-            height: 2px;
-            background: var(--border);
-        }
+        .org-node .slot, .org-node .slot-input { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+        .org-node .slot-input { background: transparent; border: none; color: var(--text-muted); width: 100%; font-size: 0.8rem; text-align: center; }
+        .org-node .slot-name { font-size: 0.85rem; color: var(--accent-dim); margin-top: 0.25rem; }
+        .connector { width: 2px; height: 24px; background: var(--border); margin: 0 auto; }
+        .connector-h { width: 60px; height: 2px; background: var(--border); }
         .connector-row { display: flex; align-items: center; justify-content: center; gap: 0; }
         .connector-row .connector-h { flex: 1; max-width: 80px; }
-        .squad-group { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; flex-shrink: 0; }
         .ft-row { display: flex; gap: 1rem; justify-content: center; }
-        .legend {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
+        .btn-row { margin-bottom: 1rem; }
+        .btn { padding: 0.5rem 1rem; background: var(--accent); border: none; border-radius: 4px; color: var(--bg-dark); font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+        .btn-rm { padding: 0.2rem 0.5rem; font-size: 0.75rem; margin-top: 0.25rem; }
+        .legend { display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
         .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
         .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
         .legend-dot.platoon { background: var(--accent); }
@@ -102,9 +66,7 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>ORGANIGRAMM – BEFEHLSSTRUKTUR</h1>
-        </header>
+        <header><h1>ORGANIGRAMM – BEFEHLSSTRUKTUR</h1></header>
         <nav>
             <a href="index.html">Übersicht</a>
             <a href="organigramm.html">Organigramm</a>
@@ -115,100 +77,12 @@
             <a href="checkliste.html">Checkliste</a>
         </nav>
 
+        <div class="btn-row">
+            <button class="btn btn-outline" onclick="addSquad()">+ Squad hinzufügen</button>
+        </div>
+
         <div class="org-wrapper">
-            <div class="org-chart">
-                <!-- Platoon -->
-                <div class="org-node platoon">
-                    <div class="role">PLATOON LEAD (PL)</div>
-                    <div class="slot">Zugführer</div>
-                    <div class="count">1 Slot</div>
-                </div>
-                <div class="connector"></div>
-                <div class="connector-row">
-                    <div class="connector-h"></div>
-                    <div class="connector-h"></div>
-                    <div class="connector-h"></div>
-                    <div class="connector-h"></div>
-                </div>
-                <div class="connector"></div>
-
-                <!-- Squads -->
-                <div class="org-row">
-                    <div class="squad-group">
-                        <div class="org-node squad">
-                            <div class="role">SQUAD 1 (ALPHA)</div>
-                            <div class="slot">SL + Medic</div>
-                            <div class="count">8–10 Mann</div>
-                        </div>
-                        <div class="connector"></div>
-                        <div class="ft-row">
-                            <div class="org-node fireteam">
-                                <div class="role">FT ALPHA</div>
-                                <div class="slot">FTL-A + 3</div>
-                            </div>
-                            <div class="org-node fireteam">
-                                <div class="role">FT BRAVO</div>
-                                <div class="slot">FTL-B + 3</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="squad-group">
-                        <div class="org-node squad">
-                            <div class="role">SQUAD 2 (BRAVO)</div>
-                            <div class="slot">SL + Medic</div>
-                            <div class="count">8–10 Mann</div>
-                        </div>
-                        <div class="connector"></div>
-                        <div class="ft-row">
-                            <div class="org-node fireteam">
-                                <div class="role">FT ALPHA</div>
-                                <div class="slot">FTL-A + 3</div>
-                            </div>
-                            <div class="org-node fireteam">
-                                <div class="role">FT BRAVO</div>
-                                <div class="slot">FTL-B + 3</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="squad-group">
-                        <div class="org-node squad">
-                            <div class="role">SQUAD 3 (CHARLIE)</div>
-                            <div class="slot">SL + Medic</div>
-                            <div class="count">8–10 Mann</div>
-                        </div>
-                        <div class="connector"></div>
-                        <div class="ft-row">
-                            <div class="org-node fireteam">
-                                <div class="role">FT ALPHA</div>
-                                <div class="slot">FTL-A + 3</div>
-                            </div>
-                            <div class="org-node fireteam">
-                                <div class="role">FT BRAVO</div>
-                                <div class="slot">FTL-B + 3</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="squad-group">
-                        <div class="org-node squad">
-                            <div class="role">SQUAD 4 (DELTA)</div>
-                            <div class="slot">SL + Medic</div>
-                            <div class="count">8–10 Mann</div>
-                        </div>
-                        <div class="connector"></div>
-                        <div class="ft-row">
-                            <div class="org-node fireteam">
-                                <div class="role">FT ALPHA</div>
-                                <div class="slot">FTL-A + 3</div>
-                            </div>
-                            <div class="org-node fireteam">
-                                <div class="role">FT BRAVO</div>
-                                <div class="slot">FTL-B + 3</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <div class="org-chart" id="org-chart"></div>
             <div class="legend">
                 <div class="legend-item"><span class="legend-dot platoon"></span> Platoon (Zug)</div>
                 <div class="legend-item"><span class="legend-dot squad"></span> Squad (Gruppe)</div>
@@ -224,27 +98,108 @@
 
     <script src="csv-export.js"></script>
     <script>
-        const SLOT_NAMES = { 1: 'PL', 2: 'SL1', 10: 'SL2', 18: 'SL3', 26: 'SL4' };
-        const data = loadFromCsvStorage();
-        const slotliste = data.slotliste || {};
-        document.querySelectorAll('.org-node').forEach(node => {
-            const roleEl = node.querySelector('.role');
-            if (!roleEl) return;
-            const txt = roleEl.textContent;
-            let slot = null;
-            if (txt.includes('PLATOON')) slot = 1;
-            else if (txt.includes('SQUAD 1')) slot = 2;
-            else if (txt.includes('SQUAD 2')) slot = 10;
-            else if (txt.includes('SQUAD 3')) slot = 18;
-            else if (txt.includes('SQUAD 4')) slot = 26;
-            if (slot && slotliste[slot] && slotliste[slot].name) {
-                const nameEl = document.createElement('div');
-                nameEl.className = 'slot-name';
-                nameEl.style.cssText = 'font-size:0.85rem;color:var(--accent-dim);margin-top:0.25rem;';
-                nameEl.textContent = slotliste[slot].name;
-                node.appendChild(nameEl);
-            }
-        });
+        const SLOT_BY_SQUAD = { 0: 1, 1: 2, 2: 10, 3: 18, 4: 26 };
+
+        function getOrganigrammData() {
+            const platoonTitle = document.getElementById('org-platoon-title');
+            const platoonSub = document.getElementById('org-platoon-subtitle');
+            const squads = [];
+            document.querySelectorAll('.squad-group').forEach((grp, idx) => {
+                const titleEl = grp.querySelector('.squad-title');
+                const subEl = grp.querySelector('.squad-subtitle');
+                const faTitle = grp.querySelector('.ft-alpha-title');
+                const faSub = grp.querySelector('.ft-alpha-sub');
+                const fbTitle = grp.querySelector('.ft-bravo-title');
+                const fbSub = grp.querySelector('.ft-bravo-sub');
+                squads.push({
+                    title: titleEl ? titleEl.value : '',
+                    subtitle: subEl ? subEl.value : '',
+                    ftAlpha: { title: faTitle ? faTitle.value : '', subtitle: faSub ? faSub.value : '' },
+                    ftBravo: { title: fbTitle ? fbTitle.value : '', subtitle: fbSub ? fbSub.value : '' }
+                });
+            });
+            return {
+                platoon: { title: platoonTitle ? platoonTitle.value : '', subtitle: platoonSub ? platoonSub.value : '' },
+                squads
+            };
+        }
+
+        function saveOrg() {
+            updateCsvStorage({ organigramm: getOrganigrammData() });
+        }
+
+        function render() {
+            const data = loadFromCsvStorage();
+            const org = data.organigramm && data.organigramm.squads && data.organigramm.squads.length
+                ? data.organigramm
+                : DEFAULT_ORGANIGRAMM;
+            const slotliste = data.slotliste || {};
+            const platoon = org.platoon || DEFAULT_ORGANIGRAMM.platoon;
+            const squads = org.squads || DEFAULT_ORGANIGRAMM.squads;
+
+            const chart = document.getElementById('org-chart');
+            const esc = s => (s || '').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+
+            let html = '';
+            html += '<div class="org-node platoon">';
+            html += '<input type="text" id="org-platoon-title" value="' + esc(platoon.title) + '" placeholder="z.B. PLATOON LEAD (PL)" maxlength="60">';
+            html += '<input type="text" class="slot-input" id="org-platoon-subtitle" value="' + esc(platoon.subtitle) + '" placeholder="z.B. Zugführer" maxlength="40">';
+            if (slotliste[1] && slotliste[1].name) html += '<div class="slot-name">' + esc(slotliste[1].name) + '</div>';
+            html += '</div>';
+
+            html += '<div class="connector"></div>';
+            html += '<div class="connector-row">';
+            for (let i = 0; i < Math.max(squads.length, 1); i++) html += '<div class="connector-h"></div>';
+            html += '</div><div class="connector"></div>';
+            html += '<div class="org-row">';
+
+            squads.forEach((s, idx) => {
+                const slotId = SLOT_BY_SQUAD[idx];
+                const slName = slotId && slotliste[slotId] && slotliste[slotId].name ? slotliste[slotId].name : '';
+                html += '<div class="squad-group">';
+                html += '<div class="org-node squad">';
+                html += '<input type="text" class="squad-title" value="' + esc(s.title) + '" placeholder="Squad" maxlength="50">';
+                html += '<input type="text" class="squad-subtitle slot-input" value="' + esc(s.subtitle) + '" placeholder="SL + Medic" maxlength="40">';
+                if (slName) html += '<div class="slot-name">' + esc(slName) + '</div>';
+                html += '<button class="btn btn-outline btn-rm" onclick="removeSquad(' + idx + ')">Squad entfernen</button>';
+                html += '</div>';
+                html += '<div class="connector"></div>';
+                html += '<div class="ft-row">';
+                html += '<div class="org-node fireteam"><input type="text" class="ft-alpha-title" value="' + esc((s.ftAlpha || {}).title) + '" placeholder="FT ALPHA" maxlength="30"><input type="text" class="ft-alpha-sub slot-input" value="' + esc((s.ftAlpha || {}).subtitle) + '" placeholder="FTL-A + 3" maxlength="30"></div>';
+                html += '<div class="org-node fireteam"><input type="text" class="ft-bravo-title" value="' + esc((s.ftBravo || {}).title) + '" placeholder="FT BRAVO" maxlength="30"><input type="text" class="ft-bravo-sub slot-input" value="' + esc((s.ftBravo || {}).subtitle) + '" placeholder="FTL-B + 3" maxlength="30"></div>';
+                html += '</div></div>';
+            });
+
+            html += '</div>';
+            chart.innerHTML = html;
+
+            chart.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('change', saveOrg);
+                inp.addEventListener('input', () => { clearTimeout(window._org); window._org = setTimeout(saveOrg, 400); });
+            });
+        }
+
+        function addSquad() {
+            const data = getOrganigrammData();
+            data.squads.push({
+                title: 'SQUAD ' + (data.squads.length + 1),
+                subtitle: 'SL + Medic',
+                ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
+                ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
+            });
+            updateCsvStorage({ organigramm: data });
+            render();
+        }
+
+        function removeSquad(idx) {
+            const data = getOrganigrammData();
+            if (data.squads.length <= 1) return;
+            data.squads.splice(idx, 1);
+            updateCsvStorage({ organigramm: data });
+            render();
+        }
+
+        render();
     </script>
 </body>
 </html>
