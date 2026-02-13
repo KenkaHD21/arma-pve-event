@@ -131,13 +131,14 @@
 
         <section>
             <h2>Daten Export / Import</h2>
-            <p style="margin-bottom: 1rem; color: var(--text-muted);">Alle Daten (Event, Slotliste, LADEF) als CSV speichern oder laden.</p>
+            <p style="margin-bottom: 1rem; color: var(--text-muted);">Alle Daten werden als CSV gespeichert. Export/Import für Backup oder Weitergabe.</p>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                 <button onclick="exportToCsv()" style="padding: 0.5rem 1rem; background: var(--accent); border: none; border-radius: 4px; color: var(--bg-dark); font-family: inherit; font-weight: 600; cursor: pointer;">Export CSV</button>
                 <label style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--accent); border-radius: 4px; color: var(--accent); font-family: inherit; cursor: pointer;">
                     Import CSV
                     <input type="file" accept=".csv" id="csv-import" style="display: none;">
                 </label>
+                <button onclick="if(confirm('Alle Daten (Event, Slotliste, LADEF, Checkliste) wirklich löschen?')){ clearAllData(); location.reload(); }" style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--alert); border-radius: 4px; color: var(--alert); font-family: inherit; font-weight: 600; cursor: pointer;">Alles löschen</button>
             </div>
         </section>
 
@@ -189,10 +190,10 @@
         const EVENT_IDS = { datum: 'event-datum', uhrzeit: 'event-uhrzeit', server: 'event-server' };
 
         function loadEvent() {
-            const d = JSON.parse(localStorage.getItem('pve-event-data') || '{}');
+            const data = loadFromCsvStorage();
             EVENT_KEYS.forEach(k => {
                 const el = document.getElementById(EVENT_IDS[k]);
-                if (el) el.value = d[k] || '';
+                if (el) el.value = data.event[k] || '';
             });
         }
 
@@ -202,7 +203,7 @@
                 const el = document.getElementById(EVENT_IDS[k]);
                 if (el) d[k] = el.value.trim();
             });
-            localStorage.setItem('pve-event-data', JSON.stringify(d));
+            updateCsvStorage({ event: d });
         }
 
         document.querySelectorAll('#event-datum, #event-uhrzeit, #event-server').forEach(el => {

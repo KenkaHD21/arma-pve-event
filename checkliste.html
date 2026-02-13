@@ -25,9 +25,11 @@
         nav a { color: var(--accent); text-decoration: none; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; }
         section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
         h2 { color: var(--accent); font-size: 1.1rem; margin-bottom: 1rem; }
-        .check-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .check-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); cursor: pointer; }
         .check-item:last-child { border-bottom: none; }
-        .check-box { width: 20px; height: 20px; border: 2px solid var(--accent); border-radius: 4px; flex-shrink: 0; }
+        .check-box { width: 20px; height: 20px; border: 2px solid var(--accent); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .check-box.checked { background: var(--accent); }
+        .check-box.checked::after { content: '✓'; color: var(--bg-dark); font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -45,28 +47,65 @@
 
         <section>
             <h2>Vorbereitung (Organisatoren)</h2>
-            <div class="check-item"><span class="check-box"></span> Server konfiguriert & getestet</div>
-            <div class="check-item"><span class="check-box"></span> Mods installiert & kompatibel</div>
-            <div class="check-item"><span class="check-box"></span> Slotliste ausgefüllt</div>
-            <div class="check-item"><span class="check-box"></span> PL & SLs benannt</div>
-            <div class="check-item"><span class="check-box"></span> Mission/Szenario vorbereitet</div>
-            <div class="check-item"><span class="check-box"></span> Briefing an alle gesendet</div>
+            <div class="check-item" data-check-id="vor-1"><span class="check-box"></span> Server konfiguriert & getestet</div>
+            <div class="check-item" data-check-id="vor-2"><span class="check-box"></span> Mods installiert & kompatibel</div>
+            <div class="check-item" data-check-id="vor-3"><span class="check-box"></span> Slotliste ausgefüllt</div>
+            <div class="check-item" data-check-id="vor-4"><span class="check-box"></span> PL & SLs benannt</div>
+            <div class="check-item" data-check-id="vor-5"><span class="check-box"></span> Mission/Szenario vorbereitet</div>
+            <div class="check-item" data-check-id="vor-6"><span class="check-box"></span> Briefing an alle gesendet</div>
         </section>
 
         <section>
             <h2>Teilnehmer (alle)</h2>
-            <div class="check-item"><span class="check-box"></span> Arma Reforger + Mods installiert</div>
-            <div class="check-item"><span class="check-box"></span> Funkfrequenzen notiert / Screenshot</div>
-            <div class="check-item"><span class="check-box"></span> Slot/Rolle bekannt</div>
-            <div class="check-item"><span class="check-box"></span> Pünktlich zum Briefing</div>
+            <div class="check-item" data-check-id="teil-1"><span class="check-box"></span> Arma Reforger + Mods installiert</div>
+            <div class="check-item" data-check-id="teil-2"><span class="check-box"></span> Funkfrequenzen notiert / Screenshot</div>
+            <div class="check-item" data-check-id="teil-3"><span class="check-box"></span> Slot/Rolle bekannt</div>
+            <div class="check-item" data-check-id="teil-4"><span class="check-box"></span> Pünktlich zum Briefing</div>
         </section>
 
         <section>
             <h2>SLs & PL</h2>
-            <div class="check-item"><span class="check-box"></span> Command-Frequenz eingestellt</div>
-            <div class="check-item"><span class="check-box"></span> Squad-Frequenz eingestellt</div>
-            <div class="check-item"><span class="check-box"></span> Brevity Codes durchgelesen</div>
+            <div class="check-item" data-check-id="sl-1"><span class="check-box"></span> Command-Frequenz eingestellt</div>
+            <div class="check-item" data-check-id="sl-2"><span class="check-box"></span> Squad-Frequenz eingestellt</div>
+            <div class="check-item" data-check-id="sl-3"><span class="check-box"></span> Brevity Codes durchgelesen</div>
         </section>
     </div>
+
+    <script src="csv-export.js"></script>
+    <script>
+        function getChecklistData() {
+            const data = {};
+            document.querySelectorAll('.check-item[data-check-id]').forEach(el => {
+                const id = el.dataset.checkId;
+                data[id] = el.querySelector('.check-box').classList.contains('checked');
+            });
+            return data;
+        }
+
+        function setChecklistData(data) {
+            if (!data) return;
+            document.querySelectorAll('.check-item[data-check-id]').forEach(el => {
+                const id = el.dataset.checkId;
+                const box = el.querySelector('.check-box');
+                if (data[id]) box.classList.add('checked');
+                else box.classList.remove('checked');
+            });
+        }
+
+        function saveChecklist() {
+            updateCsvStorage({ checkliste: getChecklistData() });
+        }
+
+        document.querySelectorAll('.check-item[data-check-id]').forEach(el => {
+            el.addEventListener('click', () => {
+                const box = el.querySelector('.check-box');
+                box.classList.toggle('checked');
+                saveChecklist();
+            });
+        });
+
+        const data = loadFromCsvStorage();
+        if (data.checkliste && Object.keys(data.checkliste).length) setChecklistData(data.checkliste);
+    </script>
 </body>
 </html>

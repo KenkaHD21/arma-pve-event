@@ -101,7 +101,7 @@
         <div class="btn-row">
             <button class="btn" onclick="saveAll()">Speichern</button>
             <button class="btn btn-outline" onclick="clearAll()">Zurücksetzen</button>
-            <button class="btn btn-outline" onclick="exportData()">Export (JSON)</button>
+            <button class="btn btn-outline" onclick="exportData()">Export CSV</button>
             <span class="save-hint">Einträge werden automatisch gespeichert.</span>
         </div>
 
@@ -185,9 +185,8 @@
         </section>
     </div>
 
+    <script src="csv-export.js"></script>
     <script>
-        const STORAGE_KEY = 'pve-slotliste-data';
-
         function getData() {
             const data = {};
             document.querySelectorAll('tr[data-slot]').forEach(tr => {
@@ -218,7 +217,7 @@
         }
 
         function saveAll() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(getData()));
+            updateCsvStorage({ slotliste: getData() });
             const btn = document.querySelector('.btn');
             const orig = btn.textContent;
             btn.textContent = 'Gespeichert!';
@@ -227,7 +226,7 @@
 
         function clearAll() {
             if (!confirm('Alle Einträge wirklich löschen?')) return;
-            localStorage.removeItem(STORAGE_KEY);
+            updateCsvStorage({ slotliste: {} });
             document.querySelectorAll('input[data-field], select[data-field]').forEach(el => {
                 if (el.tagName === 'SELECT') el.selectedIndex = 0;
                 else el.value = '';
@@ -235,13 +234,7 @@
         }
 
         function exportData() {
-            const data = getData();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'slotliste-pve-' + new Date().toISOString().slice(0,10) + '.json';
-            a.click();
-            URL.revokeObjectURL(a.href);
+            exportToCsv();
         }
 
         document.querySelectorAll('input[data-field], select[data-field]').forEach(el => {
@@ -249,8 +242,8 @@
             el.addEventListener('input', () => { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(saveAll, 500); });
         });
 
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) setData(JSON.parse(saved));
+        const data = loadFromCsvStorage();
+        if (data.slotliste && Object.keys(data.slotliste).length) setData(data.slotliste);
     </script>
 </body>
 </html>

@@ -135,9 +135,8 @@
         </div>
     </div>
 
+    <script src="csv-export.js"></script>
     <script>
-        const STORAGE_KEY = 'pve-ladef-data';
-
         function getData() {
             return {
                 lage: document.getElementById('lage').value,
@@ -158,7 +157,7 @@
         }
 
         function saveAll() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(getData()));
+            updateCsvStorage({ ladef: getData() });
             const btn = document.querySelector('.btn');
             const orig = btn.textContent;
             btn.textContent = 'Gespeichert!';
@@ -167,7 +166,7 @@
 
         function clearAll() {
             if (!confirm('Alle LADEF-Einträge löschen?')) return;
-            localStorage.removeItem(STORAGE_KEY);
+            updateCsvStorage({ ladef: {} });
             document.querySelectorAll('textarea').forEach((el) => el.value = '');
         }
 
@@ -175,8 +174,8 @@
             el.addEventListener('input', () => { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(saveAll, 500); });
         });
 
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) setData(JSON.parse(saved));
+        const data = loadFromCsvStorage();
+        if (data.ladef && Object.keys(data.ladef).length) setData(data.ladef);
     </script>
 </body>
 </html>
