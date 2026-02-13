@@ -86,6 +86,15 @@
         .slot-filter button { padding: 0.4rem 0.8rem; background: transparent; border: 1px solid var(--border); border-radius: 4px; color: var(--text); cursor: pointer; font-size: 0.9rem; }
         .slot-filter button.active { background: var(--accent); color: var(--bg-dark); border-color: var(--accent); }
         tr.slot-hidden { display: none; }
+        .slot-layout { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+        .slot-main { flex: 1; min-width: 0; }
+        .blocked-sidebar { width: 280px; flex-shrink: 0; }
+        .blocked-list { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+        .blocked-list li { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.5rem; background: var(--bg-dark); border-radius: 4px; margin-bottom: 0.35rem; font-size: 0.9rem; }
+        .blocked-list li span { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+        .blocked-list .btn-rm { padding: 0.2rem 0.5rem; font-size: 0.75rem; margin-left: 0.5rem; }
+        .blocked-add { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        .blocked-add input { flex: 1; min-width: 0; }
     </style>
 </head>
 <body>
@@ -116,6 +125,9 @@
             <button data-filter="belegt" onclick="setSlotFilter('belegt')">Nur belegt</button>
             <button data-filter="frei" onclick="setSlotFilter('frei')">Nur frei</button>
         </div>
+
+        <div class="slot-layout">
+        <div class="slot-main">
 
         <section>
             <h2>Platoon (Zug) – Slots 1–4</h2>
@@ -216,6 +228,22 @@
             <h2>Reserve / Flex</h2>
             <p style="color: var(--text-muted); margin-bottom: 1rem;">Bei Bedarf können weitere Slots (z. B. 37–40) manuell ergänzt werden.</p>
         </section>
+
+        </div>
+
+        <aside class="blocked-sidebar">
+            <section>
+                <h2>Blockierte User</h2>
+                <p class="save-hint" style="margin-bottom: 0.5rem;">Dürfen nicht an Events teilnehmen.</p>
+                <ul class="blocked-list" id="blocked-list"></ul>
+                <div class="blocked-add">
+                    <input type="text" id="blocked-input" placeholder="Name eintragen" maxlength="60">
+                    <button type="button" class="btn btn-outline" id="blocked-add-btn">Hinzufügen</button>
+                </div>
+            </section>
+        </aside>
+
+        </div>
     </div>
 
     <script src="csv-export.js"></script>
@@ -317,6 +345,47 @@
             exportToCsv();
         }
 
+        function getBlockedUsers() {
+            const data = loadFromCsvStorage();
+            return Array.isArray(data.blockedUsers) ? data.blockedUsers : [];
+        }
+
+        function saveBlockedUsers(list) {
+            updateCsvStorage({ blockedUsers: list });
+        }
+
+        function renderBlockedList() {
+            const list = getBlockedUsers();
+            const ul = document.getElementById('blocked-list');
+            if (!ul) return;
+            ul.innerHTML = list.map((name, idx) =>
+                '<li><span>' + (name || '').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '</span><button type="button" class="btn btn-outline btn-rm" data-blocked-idx="' + idx + '">Entfernen</button></li>'
+            ).join('');
+            ul.querySelectorAll('[data-blocked-idx]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const arr = getBlockedUsers();
+                    arr.splice(parseInt(this.dataset.blockedIdx, 10), 1);
+                    saveBlockedUsers(arr);
+                    renderBlockedList();
+                });
+            });
+        }
+
+        document.getElementById('blocked-add-btn').addEventListener('click', function() {
+            const inp = document.getElementById('blocked-input');
+            const name = (inp && inp.value || '').trim();
+            if (!name) return;
+            const arr = getBlockedUsers();
+            if (arr.indexOf(name) !== -1) return;
+            arr.push(name);
+            saveBlockedUsers(arr);
+            renderBlockedList();
+            if (inp) inp.value = '';
+        });
+        document.getElementById('blocked-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('blocked-add-btn').click();
+        });
+
         document.querySelectorAll('input[data-field], select[data-field]').forEach(el => {
             el.addEventListener('change', () => { saveAll(); updateSlotStat(); });
             el.addEventListener('input', () => { clearTimeout(window._saveTimer); window._saveTimer = setTimeout(() => { saveAll(); updateSlotStat(); }, 500); });
@@ -329,6 +398,7 @@
             fillPlaceholders();
         }
         updateSlotStat();
+        renderBlockedList();
     </script>
 </body>
 </html>

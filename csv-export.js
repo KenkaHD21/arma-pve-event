@@ -126,6 +126,14 @@ function buildCsvFromData(data) {
   });
   lines.push('');
 
+  const blocked = data.blockedUsers && data.blockedUsers.length ? data.blockedUsers : [];
+  if (blocked.length) {
+    lines.push('[BLOCKED_USERS]');
+    lines.push('Name');
+    blocked.forEach(name => lines.push(escapeCsv(String(name).trim())));
+    lines.push('');
+  }
+
   return lines.join('\r\n');
 }
 
@@ -217,7 +225,7 @@ function parseCsvChecklisteCustom(lines, startIdx) {
 
 function parseCsvToData(csvText) {
   const lines = csvText.split(/\r?\n/).map(l => l.trim()).filter(l => l);
-  const data = { event: {}, slotliste: {}, ladef: {}, checkliste: {}, checklisteCustom: [], funk: [], mods: [], brevity: [], respawn: '' };
+  const data = { event: {}, slotliste: {}, ladef: {}, checkliste: {}, checklisteCustom: [], funk: [], mods: [], brevity: [], respawn: '', blockedUsers: [] };
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i] === '[EVENT]') {
@@ -249,9 +257,23 @@ function parseCsvToData(csvText) {
       data.respawn = d.Regeln || '';
     } else if (lines[i] === '[ORGANIGRAMM]') {
       data.organigramm = parseCsvOrganigramm(lines, i);
+    } else if (lines[i] === '[BLOCKED_USERS]') {
+      data.blockedUsers = parseCsvBlockedUsers(lines, i);
     }
   }
   return data;
+}
+
+function parseCsvBlockedUsers(lines, startIdx) {
+  const list = [];
+  for (let i = startIdx + 2; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.startsWith('[')) break;
+    const unq = s => (s || '').replace(/^"|"$/g, '').replace(/""/g, '"');
+    const name = unq(line.replace(/^;.*/, '').trim());
+    if (name) list.push(name);
+  }
+  return list;
 }
 
 const DEFAULT_ORGANIGRAMM = {
@@ -428,7 +450,7 @@ function loadFromCsvStorage() {
       [STORAGE_KEYS_LEGACY.event, STORAGE_KEYS_LEGACY.slotliste, STORAGE_KEYS_LEGACY.ladef].forEach(k => localStorage.removeItem(k));
     }
   }
-  const def = { event: {}, slotliste: {}, ladef: {}, checkliste: {}, checklisteCustom: [], funk: [], mods: [], brevity: [], respawn: '', organigramm: null };
+  const def = { event: {}, slotliste: {}, ladef: {}, checkliste: {}, checklisteCustom: [], funk: [], mods: [], brevity: [], respawn: '', organigramm: null, blockedUsers: [] };
   return csv ? Object.assign(def, parseCsvToData(csv)) : def;
 }
 
@@ -451,6 +473,7 @@ function updateCsvStorage(partial) {
   if (partial.brevity !== undefined) data.brevity = partial.brevity;
   if (partial.respawn !== undefined) data.respawn = partial.respawn;
   if (partial.organigramm !== undefined) data.organigramm = partial.organigramm;
+  if (partial.blockedUsers !== undefined) data.blockedUsers = partial.blockedUsers;
   saveToCsvStorage(data);
 }
 
