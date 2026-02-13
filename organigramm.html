@@ -180,14 +180,23 @@
         }
 
         function addSquad() {
-            const data = getOrganigrammData();
-            data.squads.push({
-                title: 'SQUAD ' + (data.squads.length + 1),
+            const data = loadFromCsvStorage();
+            const org = data.organigramm && data.organigramm.squads && data.organigramm.squads.length
+                ? data.organigramm
+                : DEFAULT_ORGANIGRAMM;
+            const squads = (org.squads || []).map(s => ({
+                title: s.title || '',
+                subtitle: s.subtitle || '',
+                ftAlpha: s.ftAlpha ? { title: s.ftAlpha.title || '', subtitle: s.ftAlpha.subtitle || '' } : { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
+                ftBravo: s.ftBravo ? { title: s.ftBravo.title || '', subtitle: s.ftBravo.subtitle || '' } : { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
+            }));
+            squads.push({
+                title: 'SQUAD ' + (squads.length + 1),
                 subtitle: 'SL + Medic',
                 ftAlpha: { title: 'FT ALPHA', subtitle: 'FTL-A + 3' },
                 ftBravo: { title: 'FT BRAVO', subtitle: 'FTL-B + 3' }
             });
-            updateCsvStorage({ organigramm: data });
+            updateCsvStorage({ organigramm: { platoon: org.platoon || DEFAULT_ORGANIGRAMM.platoon, squads } });
             render();
         }
 

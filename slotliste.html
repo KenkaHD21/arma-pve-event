@@ -109,7 +109,7 @@
             <button class="btn btn-outline" onclick="exportData()">Export CSV</button>
             <span class="save-hint">Einträge werden automatisch gespeichert.</span>
         </div>
-        <div class="slot-stat" id="slot-stat">0 von 33 Slots belegt</div>
+        <div class="slot-stat" id="slot-stat">0 von 36 Slots belegt</div>
         <div class="slot-filter">
             <button class="active" data-filter="all" onclick="setSlotFilter('all')">Alle</button>
             <button data-filter="belegt" onclick="setSlotFilter('belegt')">Nur belegt</button>
@@ -124,6 +124,27 @@
                     <td class="slot-role">1</td>
                     <td>Platoon Lead (PL)</td>
                     <td><input type="text" class="input-name" data-field="name" placeholder="Name eintragen" maxlength="40"></td>
+                    <td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td>
+                    <td>Command</td>
+                </tr>
+                <tr data-slot="34">
+                    <td class="slot-role">34</td>
+                    <td>JTAC</td>
+                    <td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td>
+                    <td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td>
+                    <td>JTAC</td>
+                </tr>
+                <tr data-slot="35">
+                    <td class="slot-role">35</td>
+                    <td>Medic (Platoon)</td>
+                    <td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td>
+                    <td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td>
+                    <td>Command</td>
+                </tr>
+                <tr data-slot="36">
+                    <td class="slot-role">36</td>
+                    <td>Schütze (Platoon)</td>
+                    <td><input type="text" class="input-name" data-field="name" placeholder="Name" maxlength="40"></td>
                     <td><input type="text" class="input-notes" data-field="notes" placeholder="Optional" maxlength="50"></td>
                     <td>Command</td>
                 </tr>
@@ -207,7 +228,7 @@
                 if (data[slot] && data[slot].name && data[slot].name.trim()) belegt++;
             });
             const el = document.getElementById('slot-stat');
-            if (el) el.textContent = belegt + ' von 33 Slots belegt';
+            if (el) el.textContent = belegt + ' von 36 Slots belegt';
             applySlotFilter();
         }
 

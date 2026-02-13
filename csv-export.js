@@ -17,8 +17,11 @@ const SLOT_ROLES = {
   15: 'FTL Bravo', 16: 'Rifleman', 17: 'Rifleman', 18: 'Squad Lead (SL)', 19: 'Medic',
   20: 'FTL Alpha', 21: 'Rifleman', 22: 'Rifleman', 23: 'FTL Bravo', 24: 'Rifleman',
   25: 'Rifleman', 26: 'Squad Lead (SL)', 27: 'Medic', 28: 'FTL Alpha', 29: 'Rifleman',
-  30: 'Rifleman', 31: 'FTL Bravo', 32: 'Rifleman', 33: 'Rifleman'
+  30: 'Rifleman', 31: 'FTL Bravo', 32: 'Rifleman', 33: 'Rifleman',
+  34: 'JTAC', 35: 'Medic (Platoon)', 36: 'Schütze (Platoon)'
 };
+
+const SLOT_COUNT = 36;
 
 function escapeCsv(val) {
   if (val == null) return '';
@@ -52,7 +55,7 @@ function buildCsvFromData(data) {
 
   lines.push('[SLOTLISTE]');
   lines.push('Slot;Rolle;Name;Bemerkung');
-  for (let i = 1; i <= 33; i++) {
+  for (let i = 1; i <= SLOT_COUNT; i++) {
     const s = sl[i] || {};
     const role = s.role || SLOT_ROLES[i] || '';
     lines.push([i, escapeCsv(role), escapeCsv(s.name), escapeCsv(s.notes)].join(';'));
