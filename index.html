@@ -112,20 +112,32 @@
             <div class="grid-2">
                 <div class="info-card">
                     <strong>Datum:</strong><br>
-                    [Datum eintragen]
+                    <input type="text" id="event-datum" placeholder="z.B. 15.03.2025" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
                 </div>
                 <div class="info-card">
                     <strong>Uhrzeit:</strong><br>
-                    [Uhrzeit eintragen]
+                    <input type="text" id="event-uhrzeit" placeholder="z.B. 19:00" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
                 </div>
                 <div class="info-card">
                     <strong>Server:</strong><br>
-                    ######
+                    <input type="text" id="event-server" placeholder="IP:Port" style="background:transparent;border:none;color:inherit;width:100%;font:inherit;">
                 </div>
                 <div class="info-card">
                     <strong>Mods:</strong><br>
                     <a href="mods.html" style="color: var(--accent);">###### – Mod-Liste</a>
                 </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Daten Export / Import</h2>
+            <p style="margin-bottom: 1rem; color: var(--text-muted);">Alle Daten (Event, Slotliste, LADEF) als CSV speichern oder laden.</p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button onclick="exportToCsv()" style="padding: 0.5rem 1rem; background: var(--accent); border: none; border-radius: 4px; color: var(--bg-dark); font-family: inherit; font-weight: 600; cursor: pointer;">Export CSV</button>
+                <label style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--accent); border-radius: 4px; color: var(--accent); font-family: inherit; cursor: pointer;">
+                    Import CSV
+                    <input type="file" accept=".csv" id="csv-import" style="display: none;">
+                </label>
             </div>
         </section>
 
@@ -170,5 +182,48 @@
             Arma Reforger PVE Event – Übersicht v1.0
         </footer>
     </div>
+
+    <script src="csv-export.js"></script>
+    <script>
+        const EVENT_KEYS = ['datum', 'uhrzeit', 'server'];
+        const EVENT_IDS = { datum: 'event-datum', uhrzeit: 'event-uhrzeit', server: 'event-server' };
+
+        function loadEvent() {
+            const d = JSON.parse(localStorage.getItem('pve-event-data') || '{}');
+            EVENT_KEYS.forEach(k => {
+                const el = document.getElementById(EVENT_IDS[k]);
+                if (el) el.value = d[k] || '';
+            });
+        }
+
+        function saveEvent() {
+            const d = {};
+            EVENT_KEYS.forEach(k => {
+                const el = document.getElementById(EVENT_IDS[k]);
+                if (el) d[k] = el.value.trim();
+            });
+            localStorage.setItem('pve-event-data', JSON.stringify(d));
+        }
+
+        document.querySelectorAll('#event-datum, #event-uhrzeit, #event-server').forEach(el => {
+            el.addEventListener('change', saveEvent);
+            el.addEventListener('input', () => { clearTimeout(window._ev); window._ev = setTimeout(saveEvent, 500); });
+        });
+
+        document.getElementById('csv-import').addEventListener('change', function(e) {
+            const f = e.target.files[0];
+            if (!f) return;
+            const r = new FileReader();
+            r.onload = function() {
+                importFromCsv(r.result);
+                loadEvent();
+                alert('Import abgeschlossen. Event-Daten aktualisiert. Slotliste und LADEF laden die neuen Daten beim Aufruf.');
+            };
+            r.readAsText(f, 'UTF-8');
+            e.target.value = '';
+        });
+
+        loadEvent();
+    </script>
 </body>
 </html>
