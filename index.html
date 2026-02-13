@@ -148,6 +148,7 @@
         <section id="countdown-section" style="display:none;">
             <h2>Countdown</h2>
             <p id="countdown-display" style="font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; color: var(--accent);"></p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Stunden : Minuten : Sekunden</p>
         </section>
 
         <section>
@@ -262,11 +263,10 @@
             }
             const diff = target - now;
             const t = Math.floor(diff / 1000);
-            const d = Math.floor(t / 86400);
-            const h = Math.floor((t % 86400) / 3600);
+            const h = Math.floor(t / 3600);
             const m = Math.floor((t % 3600) / 60);
             const s = t % 60;
-            sec.textContent = (d > 0 ? d + 'd ' : '') + String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            sec.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
         }
 
         document.querySelectorAll('#event-datum, #event-uhrzeit, #event-zeitzone, #event-server, #event-passwort, #event-beschreibung, #event-kontakt').forEach(el => {
