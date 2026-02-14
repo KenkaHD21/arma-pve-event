@@ -96,6 +96,8 @@
         </section>
     </div>
 
+    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-storage.js"></script>
     <script src="csv-export.js"></script>
     <script>
         const SLOT_BY_SQUAD = { 0: 5, 1: 13, 2: 21, 3: 29 };
@@ -254,6 +256,7 @@
             updateCsvStorage({ organigramm: def });
         }
         render();
+        onSupabaseSynced(function() { render(); });
     </script>
 </body>
 </html>

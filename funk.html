@@ -150,6 +150,8 @@
         </section>
     </div>
 
+    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-storage.js"></script>
     <script src="csv-export.js"></script>
     <script>
         function getFunkData() {
@@ -268,6 +270,7 @@
         const data = loadFromCsvStorage();
         renderFunk(data.funk);
         renderBrevity(data.brevity);
+        onSupabaseSynced(function() { var d = loadFromCsvStorage(); renderFunk(d.funk); renderBrevity(d.brevity); });
     </script>
 </body>
 </html>

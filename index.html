@@ -238,6 +238,8 @@
         </footer>
     </div>
 
+    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-storage.js"></script>
     <script src="csv-export.js"></script>
     <script>
         const EVENT_KEYS = ['missionstitel', 'karte', 'datum', 'uhrzeit', 'dauer', 'zeitzone', 'server', 'teilnehmerlimit', 'passwort', 'kontakt', 'beschreibung', 'version', 'notizen'];
@@ -329,6 +331,7 @@
         }
         updateCountdown();
         setInterval(updateCountdown, 1000);
+        onSupabaseSynced(function() { loadEvent(); updateCountdown(); var d = loadFromCsvStorage(); var re = document.getElementById('respawn-regeln'); if (re) re.value = d.respawn || ''; });
     </script>
 </body>
 </html>

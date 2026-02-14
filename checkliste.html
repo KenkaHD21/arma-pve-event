@@ -82,6 +82,8 @@
         </section>
     </div>
 
+    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-storage.js"></script>
     <script src="csv-export.js"></script>
     <script>
         function getChecklistData() {
@@ -164,6 +166,7 @@
         const data = loadFromCsvStorage();
         if (data.checkliste && Object.keys(data.checkliste).length) setChecklistData(data.checkliste);
         renderCustomChecks(data.checklisteCustom || []);
+        onSupabaseSynced(function() { var d = loadFromCsvStorage(); if (d.checkliste && Object.keys(d.checkliste).length) setChecklistData(d.checkliste); renderCustomChecks(d.checklisteCustom || []); });
     </script>
 </body>
 </html>

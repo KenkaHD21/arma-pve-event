@@ -135,6 +135,8 @@
         </div>
     </div>
 
+    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-storage.js"></script>
     <script src="csv-export.js"></script>
     <script>
         function getData() {
@@ -176,6 +178,7 @@
 
         const data = loadFromCsvStorage();
         if (data.ladef && Object.keys(data.ladef).length) setData(data.ladef);
+        onSupabaseSynced(function() { var d = loadFromCsvStorage(); if (d.ladef && Object.keys(d.ladef).length) setData(d.ladef); });
     </script>
 </body>
 </html>

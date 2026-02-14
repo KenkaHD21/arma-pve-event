@@ -76,6 +76,8 @@
         <div id="mods-container"></div>
     </div>
 
+    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-storage.js"></script>
     <script src="csv-export.js"></script>
     <script>
         const KAT_CLASS = { ace: 'ace', wcs: 'wcs', gameplay: 'core', core: 'core' };
@@ -146,6 +148,7 @@
 
         const data = loadFromCsvStorage();
         renderMods(data.mods);
+        onSupabaseSynced(function() { renderMods(loadFromCsvStorage().mods); });
     </script>
 </body>
 </html>

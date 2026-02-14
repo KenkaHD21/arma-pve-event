@@ -454,10 +454,11 @@ function loadFromCsvStorage() {
   return csv ? Object.assign(def, parseCsvToData(csv)) : def;
 }
 
-/** Speichert alle Daten als CSV im localStorage. */
+/** Speichert alle Daten als CSV im localStorage und optional in Supabase. */
 function saveToCsvStorage(data) {
   const csv = buildCsvFromData(data);
   localStorage.setItem(CSV_STORAGE_KEY, csv);
+  if (typeof window.saveToSupabase === 'function') window.saveToSupabase(csv);
 }
 
 /** Lädt, merged Teil-Daten, speichert. */
@@ -513,4 +514,9 @@ function fallbackCopy(text) {
 function clearAllData() {
   localStorage.removeItem(CSV_STORAGE_KEY);
   Object.values(STORAGE_KEYS_LEGACY).forEach(k => localStorage.removeItem(k));
+}
+
+/** Wird nach Supabase-Sync aufgerufen – z.B. Seite neu laden. */
+function onSupabaseSynced(callback) {
+  window.addEventListener('pve-storage-synced', callback);
 }
